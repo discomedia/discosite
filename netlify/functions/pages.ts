@@ -1,8 +1,10 @@
 import type { Handler } from "@netlify/functions";
 import { json, requireAdmin } from "./_auth";
-import { allPages } from "./_pages";
+import { allPages, connectPageStore } from "./_pages";
 
 export const handler: Handler = async (event) => {
+  connectPageStore(event);
+
   if (event.httpMethod !== "GET") return json(405, { error: "Method not allowed." });
   const unauthorized = requireAdmin(event);
   if (unauthorized) return unauthorized;

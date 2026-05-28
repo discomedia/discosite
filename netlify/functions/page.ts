@@ -1,8 +1,10 @@
 import type { Handler } from "@netlify/functions";
 import { isAuthenticated, json, requireAdmin } from "./_auth";
-import { deletePage, findPage, savePage } from "./_pages";
+import { connectPageStore, deletePage, findPage, savePage } from "./_pages";
 
 export const handler: Handler = async (event) => {
+  connectPageStore(event);
+
   if (event.httpMethod === "GET") {
     const slug = event.queryStringParameters?.slug || "/";
     const page = await findPage(slug);

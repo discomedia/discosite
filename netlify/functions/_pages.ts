@@ -1,4 +1,5 @@
-import { getStore } from "@netlify/blobs";
+import { connectLambda, getStore } from "@netlify/blobs";
+import type { HandlerEvent } from "@netlify/functions";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { coreSlugs, readSeedPages, slugToKey } from "../../src/lib/content";
@@ -6,6 +7,14 @@ import type { PageRecord } from "../../src/lib/types";
 
 const storeName = "disco-media-pages";
 const localStoreDir = path.join(process.cwd(), ".netlify", "local-blobs", storeName);
+type LambdaBlobEvent = Parameters<typeof connectLambda>[0];
+
+export function connectPageStore(event: HandlerEvent): void {
+  const lambdaEvent = event as HandlerEvent & Partial<LambdaBlobEvent>;
+  if (typeof lambdaEvent.blobs === "string") {
+    connectLambda(lambdaEvent as LambdaBlobEvent);
+  }
+}
 
 function normalizeSlug(slug: string): string {
   if (!slug || slug === "/") return "/";
@@ -112,11 +121,11 @@ function isMissingBlobEnvironment(error: unknown): boolean {
 }
 
 function allowLocalBlobFallback(): boolean {
-  return (
-    process.env.NODE_ENV !== "production" ||
-    process.env.NETLIFY_DEV === "true" ||
-    process.env.NETLIFY_LOCAL === "true"
-  );
+  if (process.env.NETLIFY_DEV === "true" || process.env.NETLIFY_LOCAL === "true") return true;
+  if (process.env.NETLIFY === "true" || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.LAMBDA_TASK_ROOT) {
+    return false;
+  }
+  return process.env.NODE_ENV !== "production";
 }
 
 async function readLocalPages(): Promise<PageRecord[]> {
