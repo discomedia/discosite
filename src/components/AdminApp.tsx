@@ -276,8 +276,8 @@ export function AdminApp() {
 
       {modalOpen && draft && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/35 p-4">
-          <section className="grid max-h-[92vh] w-full max-w-6xl overflow-hidden border border-slate-200 bg-white shadow-2xl lg:grid-cols-[360px_1fr]">
-            <div className="border-b border-slate-200 p-5 lg:col-span-2">
+          <section className="flex h-[92vh] w-full max-w-6xl flex-col overflow-hidden border border-slate-200 bg-white shadow-2xl">
+            <div className="shrink-0 border-b border-slate-200 p-5">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-black text-slate-950">Edit page</h2>
                 <button className="focus-ring inline-flex h-10 w-10 items-center justify-center text-slate-600" onClick={() => setModalOpen(false)}>
@@ -285,55 +285,57 @@ export function AdminApp() {
                 </button>
               </div>
             </div>
-            <div className="grid content-start gap-5 overflow-auto border-r border-slate-200 p-5">
-              {[
-                ["slug", "Slug"],
-                ["title", "Title"],
-                ["navLabel", "Navigation label"],
-                ["seoTitle", "SEO title"],
-              ].map(([field, label]) => (
-                <label className="grid gap-2 text-sm font-bold text-slate-950" key={field}>
-                  {label}
-                  <input
-                    className="focus-ring min-h-11 border border-slate-300 px-3 text-sm font-semibold"
-                    disabled={field === "slug" && coreSlugs.has(draft.slug)}
-                    onChange={(event) => setDraft({ ...draft, [field]: event.target.value })}
-                    value={String(draft[field as keyof PageRecord])}
+            <div className="grid min-h-0 flex-1 overflow-auto lg:grid-cols-[360px_minmax(0,1fr)] lg:overflow-hidden">
+              <div className="grid content-start gap-5 overflow-auto border-r border-slate-200 p-5">
+                {[
+                  ["slug", "Slug"],
+                  ["title", "Title"],
+                  ["navLabel", "Navigation label"],
+                  ["seoTitle", "SEO title"],
+                ].map(([field, label]) => (
+                  <label className="grid gap-2 text-sm font-bold text-slate-950" key={field}>
+                    {label}
+                    <input
+                      className="focus-ring min-h-11 border border-slate-300 px-3 text-sm font-semibold"
+                      disabled={field === "slug" && coreSlugs.has(draft.slug)}
+                      onChange={(event) => setDraft({ ...draft, [field]: event.target.value })}
+                      value={String(draft[field as keyof PageRecord])}
+                    />
+                  </label>
+                ))}
+                <label className="grid gap-2 text-sm font-bold text-slate-950">
+                  Meta description
+                  <textarea
+                    className="focus-ring min-h-28 border border-slate-300 px-3 py-2 text-sm font-semibold"
+                    onChange={(event) => setDraft({ ...draft, description: event.target.value })}
+                    value={draft.description}
                   />
                 </label>
-              ))}
-              <label className="grid gap-2 text-sm font-bold text-slate-950">
-                Meta description
-                <textarea
-                  className="focus-ring min-h-28 border border-slate-300 px-3 py-2 text-sm font-semibold"
-                  onChange={(event) => setDraft({ ...draft, description: event.target.value })}
-                  value={draft.description}
-                />
-              </label>
-              <label className="flex items-center gap-3 text-sm font-bold text-slate-950">
-                <input
-                  checked={draft.published}
-                  onChange={(event) => setDraft({ ...draft, published: event.target.checked })}
-                  type="checkbox"
-                />
-                Published
-              </label>
-            </div>
-            <div className="grid min-h-[560px] overflow-hidden md:grid-cols-2">
-              <label className="grid min-h-full grid-rows-[auto_1fr] border-r border-slate-200 text-sm font-bold text-slate-950">
-                <span className="border-b border-slate-200 px-5 py-4">Markdown</span>
-                <textarea
-                  className="focus-ring min-h-[420px] resize-none border-0 bg-slate-950 p-5 font-mono text-sm leading-6 text-slate-50 outline-none"
-                  onChange={(event) => setDraft({ ...draft, markdown: event.target.value })}
-                  value={draft.markdown}
-                />
-              </label>
-              <div className="grid min-h-full grid-rows-[auto_1fr]">
-                <div className="border-b border-slate-200 px-5 py-4 text-sm font-bold text-slate-950">Preview</div>
-                <div className="prose-disco overflow-auto p-5" dangerouslySetInnerHTML={{ __html: previewHtml }} />
+                <label className="flex items-center gap-3 text-sm font-bold text-slate-950">
+                  <input
+                    checked={draft.published}
+                    onChange={(event) => setDraft({ ...draft, published: event.target.checked })}
+                    type="checkbox"
+                  />
+                  Published
+                </label>
+              </div>
+              <div className="grid min-h-0 overflow-hidden md:grid-cols-2">
+                <label className="grid min-h-0 grid-rows-[auto_1fr] border-r border-slate-200 text-sm font-bold text-slate-950">
+                  <span className="border-b border-slate-200 px-5 py-4">Markdown</span>
+                  <textarea
+                    className="focus-ring min-h-0 resize-none overflow-auto border-0 bg-slate-950 p-5 font-mono text-sm leading-6 text-slate-50 outline-none"
+                    onChange={(event) => setDraft({ ...draft, markdown: event.target.value })}
+                    value={draft.markdown}
+                  />
+                </label>
+                <div className="grid min-h-0 grid-rows-[auto_1fr]">
+                  <div className="border-b border-slate-200 px-5 py-4 text-sm font-bold text-slate-950">Preview</div>
+                  <div className="prose-disco min-h-0 overflow-auto p-5" dangerouslySetInnerHTML={{ __html: previewHtml }} />
+                </div>
               </div>
             </div>
-            <div className="flex flex-col gap-3 border-t border-slate-200 p-5 md:flex-row md:items-center md:justify-between lg:col-span-2">
+            <div className="flex shrink-0 flex-col gap-3 border-t border-slate-200 p-5 md:flex-row md:items-center md:justify-between">
               <button
                 className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 border border-red-300 px-4 text-sm font-bold text-red-700 disabled:cursor-not-allowed disabled:opacity-40"
                 disabled={coreSlugs.has(draft.slug) || saving}
