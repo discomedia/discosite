@@ -1,0 +1,12 @@
+---
+import SiteLayout from "../../components/SiteLayout.astro";
+import { PageRenderer } from "../../components/PageRenderer";
+import { findSeedPage, publicSeedPages } from "../../lib/content";
+
+const page = findSeedPage("/privacy")!;
+const pages = publicSeedPages();
+---
+
+<SiteLayout title={page.seoTitle} description={page.description} path="/privacy" pages={pages}>
+  <PageRenderer page={page} client:load />
+</SiteLayout>

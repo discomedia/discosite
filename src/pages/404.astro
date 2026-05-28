@@ -1,0 +1,16 @@
+---
+import SiteLayout from "../components/SiteLayout.astro";
+import { DynamicPageRenderer } from "../components/PageRenderer";
+import { publicSeedPages } from "../lib/content";
+
+const pages = publicSeedPages();
+---
+
+<SiteLayout
+  title="Disco Media"
+  description="Disco Media creates and operates global media products."
+  path={Astro.url.pathname}
+  pages={pages}
+>
+  <DynamicPageRenderer client:load />
+</SiteLayout>

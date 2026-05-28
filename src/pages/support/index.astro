@@ -1,0 +1,22 @@
+---
+import SiteLayout from "../../components/SiteLayout.astro";
+import { ContactSupportForm } from "../../components/Forms";
+import { PageRenderer } from "../../components/PageRenderer";
+import { findSeedPage, publicSeedPages } from "../../lib/content";
+
+const page = findSeedPage("/support")!;
+const pages = publicSeedPages();
+---
+
+<SiteLayout title={page.seoTitle} description={page.description} path="/support" pages={pages}>
+  <main class="bg-white">
+    <section class="content-shell grid gap-12 py-16 md:grid-cols-[0.92fr_1.08fr] md:py-24">
+      <div>
+        <PageRenderer page={page} live={true} client:load />
+      </div>
+      <div class="border border-slate-200 bg-slate-50 p-6 md:p-8">
+        <ContactSupportForm kind="support" client:load />
+      </div>
+    </section>
+  </main>
+</SiteLayout>

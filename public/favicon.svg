@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Disco Media">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="0.52" stop-color="#d9e2ec"/>
+      <stop offset="1" stop-color="#64748b"/>
+    </linearGradient>
+    <linearGradient id="orbit" x1="6" y1="52" x2="58" y2="14">
+      <stop offset="0" stop-color="#f59e0b"/>
+      <stop offset="0.5" stop-color="#06b6d4"/>
+      <stop offset="1" stop-color="#2563eb"/>
+    </linearGradient>
+  </defs>
+  <circle cx="29" cy="32" r="18" fill="#f8fafc" stroke="#0f172a" stroke-width="2"/>
+  <path d="M11 42c14-14 31-23 46-24" fill="none" stroke="url(#orbit)" stroke-width="3" stroke-linecap="round"/>
+  <path d="M47 13l11-5-5 11-2-5-6 5-2-2 6-5-2-2z" fill="#0f172a"/>
+  <g stroke="#0f172a" stroke-width="1" opacity=".72">
+    <path d="M12 32h34M15 24h28M17 40h24M29 14v36M21 17c-6 10-6 20 0 30M37 17c6 10 6 20 0 30"/>
+  </g>
+  <g fill="url(#tile)" stroke="#0f172a" stroke-width=".5">
+    <rect x="23" y="18" width="6" height="6"/>
+    <rect x="30" y="18" width="6" height="6"/>
+    <rect x="17" y="25" width="6" height="6"/>
+    <rect x="24" y="25" width="6" height="6"/>
+    <rect x="31" y="25" width="6" height="6"/>
+    <rect x="38" y="25" width="6" height="6"/>
+    <rect x="18" y="32" width="6" height="6"/>
+    <rect x="25" y="32" width="6" height="6"/>
+    <rect x="32" y="32" width="6" height="6"/>
+    <rect x="23" y="39" width="6" height="6"/>
+    <rect x="30" y="39" width="6" height="6"/>
+  </g>
+</svg>

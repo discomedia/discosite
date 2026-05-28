@@ -1,0 +1,16 @@
+---
+import SiteLayout from "../../components/SiteLayout.astro";
+import { AdminApp } from "../../components/AdminApp";
+import { publicSeedPages } from "../../lib/content";
+
+const pages = publicSeedPages();
+---
+
+<SiteLayout
+  title="Admin | Disco Media"
+  description="Disco Media content administration."
+  path="/admin"
+  pages={pages}
+>
+  <AdminApp client:load />
+</SiteLayout>
