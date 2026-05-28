@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
-import { Eye, FileText, Home, Link2, Menu, Plus, Save, Trash2, X } from "lucide-react";
+import { ArrowDown, ArrowUp, Eye, FileText, Home, Link2, Plus, Save, Trash2, X } from "lucide-react";
 import { renderMarkdown } from "../lib/markdown";
 import type { MenuArea, MenuItemRecord, PageRecord } from "../lib/types";
 
@@ -21,6 +21,12 @@ const menuAreaLabels: Record<MenuArea, string> = {
   headerCta: "Header button",
   footer: "Footer",
 };
+const menuAreaDescriptions: Record<MenuArea, string> = {
+  primary: "Links across the top of the site.",
+  headerCta: "The prominent button at the right of the header.",
+  footer: "Links shown at the bottom of every page.",
+};
+const menuAreas: MenuArea[] = ["primary", "headerCta", "footer"];
 
 const emptyMenuItem: MenuItemRecord = {
   id: "new-menu-item",
@@ -57,6 +63,19 @@ function responseError(payload: Record<string, unknown>, fallback: string): stri
   return typeof payload.error === "string" ? payload.error : fallback;
 }
 
+function sortMenuItems(items: MenuItemRecord[]): MenuItemRecord[] {
+  return [...items].sort((a, b) => a.order - b.order || a.label.localeCompare(b.label));
+}
+
+function normalizeMenuOrders(items: MenuItemRecord[]): MenuItemRecord[] {
+  return menuAreas.flatMap((area) =>
+    sortMenuItems(items.filter((item) => item.area === area)).map((item, index) => ({
+      ...item,
+      order: index + 1,
+    })),
+  );
+}
+
 export function AdminApp() {
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
@@ -64,7 +83,7 @@ export function AdminApp() {
   const [pages, setPages] = useState<PageRecord[]>([]);
   const [menuItems, setMenuItems] = useState<MenuItemRecord[]>([]);
   const [selectedSlug, setSelectedSlug] = useState("/");
-  const [selectedMenuId, setSelectedMenuId] = useState("");
+  const [selectedMenuArea, setSelectedMenuArea] = useState<MenuArea>("primary");
   const [draft, setDraft] = useState<PageRecord | null>(null);
   const [menuDraft, setMenuDraft] = useState<MenuItemRecord | null>(null);
   const [status, setStatus] = useState("Enter the password to continue.");
@@ -77,13 +96,8 @@ export function AdminApp() {
     [pages, selectedSlug],
   );
 
-  const selectedMenuItem = useMemo(
-    () => menuItems.find((item) => item.id === selectedMenuId) ?? menuItems[0],
-    [menuItems, selectedMenuId],
-  );
-
-  const sortedMenuItems = useMemo(
-    () => [...menuItems].sort((a, b) => a.area.localeCompare(b.area) || a.order - b.order || a.label.localeCompare(b.label)),
+  const groupedMenuItems = useMemo(
+    () => Object.fromEntries(menuAreas.map((area) => [area, sortMenuItems(menuItems.filter((item) => item.area === area))])) as Record<MenuArea, MenuItemRecord[]>,
     [menuItems],
   );
 
@@ -102,7 +116,7 @@ export function AdminApp() {
       setPages([]);
       setMenuItems([]);
       setSelectedSlug("/");
-      setSelectedMenuId("");
+      setSelectedMenuArea("primary");
       setStatus("Enter the password to continue.");
       return false;
     }
@@ -122,7 +136,7 @@ export function AdminApp() {
     setPages(nextPages);
     setMenuItems(nextMenuItems);
     setSelectedSlug((slug) => nextPages.some((page) => page.slug === slug) ? slug : (nextPages[0]?.slug ?? "/"));
-    setSelectedMenuId((id) => nextMenuItems.some((item) => item.id === id) ? id : (nextMenuItems[0]?.id ?? ""));
+    setSelectedMenuArea((area) => nextMenuItems.some((item) => item.area === area) ? area : "primary");
     setAuthed(true);
     setStatus("Saved just now");
     return true;
@@ -183,6 +197,7 @@ export function AdminApp() {
       ...emptyMenuItem,
       id: `menu-item-${Date.now()}`,
       label: `New link ${suffix}`,
+      area: selectedMenuArea,
       order: 50 + suffix,
     };
     setMenuDraft(item);
@@ -190,14 +205,15 @@ export function AdminApp() {
     setStatus("New menu item draft");
   }
 
-  async function saveMenu(nextItems: MenuItemRecord[], selectedId?: string) {
+  async function saveMenu(nextItems: MenuItemRecord[], selectedArea?: MenuArea) {
     setSaving(true);
     setStatus("Saving menu...");
+    const normalizedItems = normalizeMenuOrders(nextItems);
     const response = await fetch("/.netlify/functions/menu", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({ items: nextItems }),
+      body: JSON.stringify({ items: normalizedItems }),
     });
     const payload = await readJson(response);
     setSaving(false);
@@ -209,7 +225,7 @@ export function AdminApp() {
 
     const savedItems = payload.items as MenuItemRecord[];
     setMenuItems(savedItems);
-    setSelectedMenuId(selectedId && savedItems.some((item) => item.id === selectedId) ? selectedId : (savedItems[0]?.id ?? ""));
+    if (selectedArea) setSelectedMenuArea(selectedArea);
     setMenuModalOpen(false);
     setMenuDraft(null);
     setStatus("Menu saved");
@@ -224,12 +240,31 @@ export function AdminApp() {
     };
     const exists = menuItems.some((item) => item.id === payload.id);
     const nextItems = exists ? menuItems.map((item) => (item.id === payload.id ? payload : item)) : [...menuItems, payload];
-    await saveMenu(nextItems, payload.id);
+    await saveMenu(nextItems, payload.area);
   }
 
   async function deleteMenuDraft() {
     if (!menuDraft) return;
-    await saveMenu(menuItems.filter((item) => item.id !== menuDraft.id));
+    await saveMenu(menuItems.filter((item) => item.id !== menuDraft.id), menuDraft.area);
+  }
+
+  async function moveMenuItem(item: MenuItemRecord, direction: -1 | 1) {
+    const areaItems = sortMenuItems(menuItems.filter((candidate) => candidate.area === item.area));
+    const fromIndex = areaItems.findIndex((candidate) => candidate.id === item.id);
+    const toIndex = fromIndex + direction;
+    if (fromIndex < 0 || toIndex < 0 || toIndex >= areaItems.length) return;
+
+    const reorderedAreaItems = [...areaItems];
+    [reorderedAreaItems[fromIndex], reorderedAreaItems[toIndex]] = [reorderedAreaItems[toIndex], reorderedAreaItems[fromIndex]];
+    const reorderedIds = reorderedAreaItems.map((candidate) => candidate.id);
+    const nextItems = menuItems.map((candidate) => {
+      if (candidate.area !== item.area) return candidate;
+      return {
+        ...candidate,
+        order: reorderedIds.indexOf(candidate.id) + 1,
+      };
+    });
+    await saveMenu(nextItems, item.area);
   }
 
   async function saveDraft() {
@@ -355,18 +390,19 @@ export function AdminApp() {
           ) : (
             <>
               <div className="mt-5 grid gap-2">
-                {sortedMenuItems.map((item) => (
+                {menuAreas.map((area) => (
                   <button
                     className={`focus-ring flex min-h-12 items-center gap-3 px-3 text-left text-sm font-bold ${
-                      selectedMenuId === item.id ? "bg-cyan-50 text-slate-950 shadow-[inset_3px_0_0_#0891b2]" : "text-slate-600 hover:bg-slate-50"
+                      selectedMenuArea === area ? "bg-cyan-50 text-slate-950 shadow-[inset_3px_0_0_#0891b2]" : "text-slate-600 hover:bg-slate-50"
                     }`}
-                    key={item.id}
-                    onClick={() => setSelectedMenuId(item.id)}
+                    key={area}
+                    onClick={() => setSelectedMenuArea(area)}
                   >
-                    <Menu className="h-4 w-4 shrink-0" />
                     <span className="min-w-0">
-                      <span className="block truncate">{item.label}</span>
-                      <span className="block truncate text-xs font-semibold text-slate-400">{menuAreaLabels[item.area]} · {item.url}</span>
+                      <span className="block truncate">{menuAreaLabels[area]}</span>
+                      <span className="block truncate text-xs font-semibold text-slate-400">
+                        {groupedMenuItems[area].length} {groupedMenuItems[area].length === 1 ? "item" : "items"}
+                      </span>
                     </span>
                   </button>
                 ))}
@@ -383,7 +419,7 @@ export function AdminApp() {
             <div>
               <p className="text-sm font-semibold text-slate-500">/admin</p>
               <h2 className="mt-1 text-3xl font-black text-slate-950">
-                {section === "pages" ? (selected?.title ?? "Pages") : (selectedMenuItem?.label ?? "Menus")}
+                {section === "pages" ? (selected?.title ?? "Pages") : "Menus"}
               </h2>
             </div>
             <div className="flex items-center gap-4">
@@ -407,23 +443,13 @@ export function AdminApp() {
                   Edit
                 </button>
               )}
-              {section === "menus" && selectedMenuItem && (
-                <a
-                  className="focus-ring inline-flex min-h-11 items-center gap-2 border border-slate-300 px-4 text-sm font-bold text-slate-700 hover:bg-white"
-                  href={selectedMenuItem.url}
-                  target="_blank"
-                >
-                  <Link2 className="h-4 w-4" />
-                  Open link
-                </a>
-              )}
-              {section === "menus" && selectedMenuItem && (
+              {section === "menus" && (
                 <button
                   className="focus-ring inline-flex min-h-11 items-center gap-2 bg-blue-700 px-5 text-sm font-bold text-white hover:bg-blue-800"
-                  onClick={() => openMenuEditor(selectedMenuItem)}
+                  onClick={addMenuItem}
                 >
-                  <Save className="h-4 w-4" />
-                  Edit
+                  <Plus className="h-4 w-4" />
+                  Add menu item
                 </button>
               )}
             </div>
@@ -453,52 +479,105 @@ export function AdminApp() {
             </div>
           )}
 
-          {section === "menus" && selectedMenuItem && (
-            <div className="grid gap-6 xl:grid-cols-2">
-              <section className="border border-slate-200 bg-white p-6">
-                <dl className="grid gap-5 text-sm">
-                  <div>
-                    <dt className="font-black text-slate-950">Label</dt>
-                    <dd className="mt-1 text-slate-600">{selectedMenuItem.label}</dd>
-                  </div>
-                  <div>
-                    <dt className="font-black text-slate-950">URL</dt>
-                    <dd className="mt-1 break-all text-slate-600">{selectedMenuItem.url}</dd>
-                  </div>
-                  <div>
-                    <dt className="font-black text-slate-950">Menu area</dt>
-                    <dd className="mt-1 text-slate-600">{menuAreaLabels[selectedMenuItem.area]}</dd>
-                  </div>
-                  <div>
-                    <dt className="font-black text-slate-950">Order</dt>
-                    <dd className="mt-1 text-slate-600">{selectedMenuItem.order}</dd>
-                  </div>
-                  <div>
-                    <dt className="font-black text-slate-950">Published</dt>
-                    <dd className="mt-1 text-slate-600">{selectedMenuItem.published ? "Yes" : "No"}</dd>
-                  </div>
-                </dl>
-              </section>
-              <section className="border border-slate-200 bg-white p-6">
-                <h3 className="text-sm font-black uppercase tracking-normal text-slate-500">Menu layout</h3>
-                <div className="mt-5 grid gap-4">
-                  {(["primary", "headerCta", "footer"] as MenuArea[]).map((area) => (
-                    <div className="border border-slate-200 p-4" key={area}>
-                      <h4 className="text-sm font-black text-slate-950">{menuAreaLabels[area]}</h4>
-                      <div className="mt-3 grid gap-2">
-                        {sortedMenuItems.filter((item) => item.area === area).map((item) => (
-                          <div className="flex items-center justify-between gap-3 text-sm" key={item.id}>
-                            <span className={item.published ? "font-semibold text-slate-700" : "font-semibold text-slate-400"}>
-                              {item.order}. {item.label}
-                            </span>
-                            <span className="truncate text-xs font-semibold text-slate-400">{item.url}</span>
-                          </div>
-                        ))}
+          {section === "menus" && (
+            <div className="grid gap-5">
+              {menuAreas.map((area) => {
+                const areaItems = groupedMenuItems[area];
+                return (
+                  <section
+                    className={`border bg-white p-5 ${selectedMenuArea === area ? "border-cyan-500 shadow-[inset_4px_0_0_#0891b2]" : "border-slate-200"}`}
+                    key={area}
+                  >
+                    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                      <div>
+                        <h3 className="text-xl font-black text-slate-950">{menuAreaLabels[area]}</h3>
+                        <p className="mt-1 text-sm font-semibold text-slate-500">{menuAreaDescriptions[area]}</p>
                       </div>
+                      <button
+                        className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 border border-dashed border-blue-300 px-4 text-sm font-bold text-blue-700 hover:bg-blue-50"
+                        onClick={() => {
+                          setSelectedMenuArea(area);
+                          const suffix = areaItems.length + 1;
+                          setMenuDraft({
+                            ...emptyMenuItem,
+                            id: `menu-item-${Date.now()}`,
+                            area,
+                            label: `New ${menuAreaLabels[area].toLowerCase()} link ${suffix}`,
+                            order: areaItems.length + 1,
+                          });
+                          setMenuModalOpen(true);
+                          setStatus("New menu item draft");
+                        }}
+                      >
+                        <Plus className="h-4 w-4" />
+                        Add link
+                      </button>
                     </div>
-                  ))}
-                </div>
-              </section>
+
+                    <div className="mt-5 grid gap-3">
+                      {areaItems.length === 0 ? (
+                        <div className="border border-dashed border-slate-300 bg-slate-50 p-5 text-sm font-semibold text-slate-500">
+                          No links in this menu area.
+                        </div>
+                      ) : (
+                        areaItems.map((item, index) => (
+                          <div className="grid gap-3 border border-slate-200 p-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-center" key={item.id}>
+                            <div className="min-w-0">
+                              <div className="flex flex-wrap items-center gap-3">
+                                <span className="inline-flex h-7 min-w-7 items-center justify-center bg-slate-100 px-2 text-xs font-black text-slate-600">
+                                  {index + 1}
+                                </span>
+                                <h4 className={item.published ? "text-base font-black text-slate-950" : "text-base font-black text-slate-400"}>
+                                  {item.label}
+                                </h4>
+                                {!item.published && (
+                                  <span className="border border-slate-300 px-2 py-1 text-xs font-black uppercase tracking-normal text-slate-500">
+                                    Hidden
+                                  </span>
+                                )}
+                              </div>
+                              <p className="mt-2 truncate text-sm font-semibold text-slate-500">{item.url}</p>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                className="focus-ring inline-flex h-10 w-10 items-center justify-center border border-slate-300 text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+                                disabled={index === 0 || saving}
+                                onClick={() => moveMenuItem(item, -1)}
+                                title="Move up"
+                              >
+                                <ArrowUp className="h-4 w-4" />
+                              </button>
+                              <button
+                                className="focus-ring inline-flex h-10 w-10 items-center justify-center border border-slate-300 text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+                                disabled={index === areaItems.length - 1 || saving}
+                                onClick={() => moveMenuItem(item, 1)}
+                                title="Move down"
+                              >
+                                <ArrowDown className="h-4 w-4" />
+                              </button>
+                              <a
+                                className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 border border-slate-300 px-3 text-sm font-bold text-slate-700 hover:bg-slate-50"
+                                href={item.url}
+                                target="_blank"
+                              >
+                                <Link2 className="h-4 w-4" />
+                                Open
+                              </a>
+                              <button
+                                className="focus-ring inline-flex min-h-10 items-center justify-center gap-2 bg-blue-700 px-4 text-sm font-bold text-white hover:bg-blue-800"
+                                onClick={() => openMenuEditor(item)}
+                              >
+                                <Save className="h-4 w-4" />
+                                Edit
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </section>
+                );
+              })}
             </div>
           )}
         </div>
@@ -627,29 +706,18 @@ export function AdminApp() {
                   Internal links can use /portfolio/app1. External links can use https://, mailto:, or tel:.
                 </span>
               </label>
-              <div className="grid gap-5 md:grid-cols-2">
-                <label className="grid gap-2 text-sm font-bold text-slate-950">
-                  Menu area
-                  <select
-                    className="focus-ring min-h-11 border border-slate-300 px-3 text-sm font-semibold"
-                    onChange={(event) => setMenuDraft({ ...menuDraft, area: event.target.value as MenuArea })}
-                    value={menuDraft.area}
-                  >
-                    {(["primary", "headerCta", "footer"] as MenuArea[]).map((area) => (
-                      <option key={area} value={area}>{menuAreaLabels[area]}</option>
-                    ))}
-                  </select>
-                </label>
-                <label className="grid gap-2 text-sm font-bold text-slate-950">
-                  Order
-                  <input
-                    className="focus-ring min-h-11 border border-slate-300 px-3 text-sm font-semibold"
-                    onChange={(event) => setMenuDraft({ ...menuDraft, order: Number(event.target.value) })}
-                    type="number"
-                    value={menuDraft.order}
-                  />
-                </label>
-              </div>
+              <label className="grid gap-2 text-sm font-bold text-slate-950">
+                Menu area
+                <select
+                  className="focus-ring min-h-11 border border-slate-300 px-3 text-sm font-semibold"
+                  onChange={(event) => setMenuDraft({ ...menuDraft, area: event.target.value as MenuArea })}
+                  value={menuDraft.area}
+                >
+                  {menuAreas.map((area) => (
+                    <option key={area} value={area}>{menuAreaLabels[area]}</option>
+                  ))}
+                </select>
+              </label>
               <label className="flex items-center gap-3 text-sm font-bold text-slate-950">
                 <input
                   checked={menuDraft.published}
