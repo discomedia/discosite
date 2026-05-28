@@ -39,17 +39,30 @@ export function AdminApp() {
 
   const previewHtml = useMemo(() => renderMarkdown(draft?.markdown ?? ""), [draft?.markdown]);
 
-  async function loadPages() {
+  async function loadPages(): Promise<boolean> {
     const response = await fetch("/.netlify/functions/pages", { credentials: "include" });
+    const payload = await response.json().catch(() => ({}));
+
     if (response.status === 401) {
       setAuthed(false);
-      return;
+      setPages([]);
+      setSelectedSlug("/");
+      setStatus("Enter the password to continue.");
+      return false;
     }
-    const payload = await response.json();
-    setPages(payload.pages);
-    setSelectedSlug((slug) => payload.pages.some((page: PageRecord) => page.slug === slug) ? slug : "/");
+
+    if (!response.ok || !Array.isArray(payload.pages)) {
+      const error = typeof payload.error === "string" ? payload.error : "Unable to load admin content.";
+      setStatus(error);
+      return false;
+    }
+
+    const nextPages = payload.pages as PageRecord[];
+    setPages(nextPages);
+    setSelectedSlug((slug) => nextPages.some((page) => page.slug === slug) ? slug : (nextPages[0]?.slug ?? "/"));
     setAuthed(true);
     setStatus("Saved just now");
+    return true;
   }
 
   useEffect(() => {
@@ -70,7 +83,7 @@ export function AdminApp() {
       return;
     }
     setPassword("");
-    await loadPages();
+    await loadPages().catch(() => setStatus("Unable to load admin content."));
   }
 
   function openEditor(page: PageRecord) {
