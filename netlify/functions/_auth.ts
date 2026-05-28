@@ -4,17 +4,27 @@ import type { HandlerEvent, HandlerResponse } from "@netlify/functions";
 const cookieName = "dm_admin";
 const maxAgeSeconds = 60 * 60 * 8;
 
-function secret(): string {
-  return process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD || "local-development-secret";
+function isLocalDevelopment(): boolean {
+  return process.env.NETLIFY_DEV === "true" || process.env.CONTEXT === "dev" || process.env.NODE_ENV === "development";
 }
 
-function sign(value: string): string {
-  return crypto.createHmac("sha256", secret()).update(value).digest("base64url");
+function secret(): string | null {
+  if (process.env.ADMIN_SESSION_SECRET) return process.env.ADMIN_SESSION_SECRET;
+  if (isLocalDevelopment()) return process.env.ADMIN_PASSWORD || "local-development-secret";
+  return null;
 }
 
-export function createSessionCookie(): string {
+function sign(value: string): string | null {
+  const signingSecret = secret();
+  if (!signingSecret) return null;
+  return crypto.createHmac("sha256", signingSecret).update(value).digest("base64url");
+}
+
+export function createSessionCookie(): string | null {
   const expires = Date.now() + maxAgeSeconds * 1000;
-  const value = `${expires}.${sign(String(expires))}`;
+  const signature = sign(String(expires));
+  if (!signature) return null;
+  const value = `${expires}.${signature}`;
   return `${cookieName}=${value}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAgeSeconds}; Secure`;
 }
 
@@ -27,7 +37,14 @@ export function isAuthenticated(event: HandlerEvent): boolean {
   if (!expires || !signature) return false;
   if (Number(expires) < Date.now()) return false;
 
-  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(sign(expires)));
+  const expectedSignature = sign(expires);
+  if (!expectedSignature) return false;
+
+  const signatureBuffer = Buffer.from(signature);
+  const expectedSignatureBuffer = Buffer.from(expectedSignature);
+  if (signatureBuffer.length !== expectedSignatureBuffer.length) return false;
+
+  return crypto.timingSafeEqual(signatureBuffer, expectedSignatureBuffer);
 }
 
 export function json(statusCode: number, body: unknown, headers: Record<string, string> = {}): HandlerResponse {
@@ -42,6 +59,7 @@ export function json(statusCode: number, body: unknown, headers: Record<string, 
 }
 
 export function requireAdmin(event: HandlerEvent): HandlerResponse | null {
+  if (!secret()) return json(500, { error: "ADMIN_SESSION_SECRET is not configured." });
   if (isAuthenticated(event)) return null;
   return json(401, { error: "Authentication required." });
 }

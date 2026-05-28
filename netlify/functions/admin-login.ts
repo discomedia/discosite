@@ -10,5 +10,8 @@ export const handler: Handler = async (event) => {
   const body = JSON.parse(event.body || "{}") as { password?: string };
   if (body.password !== expected) return json(401, { error: "Invalid password." });
 
-  return json(200, { ok: true }, { "Set-Cookie": createSessionCookie() });
+  const sessionCookie = createSessionCookie();
+  if (!sessionCookie) return json(500, { error: "ADMIN_SESSION_SECRET is not configured." });
+
+  return json(200, { ok: true }, { "Set-Cookie": sessionCookie });
 };
