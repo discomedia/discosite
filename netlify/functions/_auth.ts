@@ -3,6 +3,8 @@ import type { HandlerEvent, HandlerResponse } from "@netlify/functions";
 
 const cookieName = "dm_admin";
 const maxAgeSeconds = 60 * 60 * 8;
+const missingSessionSecretMessage =
+  "ADMIN_SESSION_SECRET is not configured. Add ADMIN_SESSION_SECRET in Netlify environment variables and redeploy.";
 
 function isLocalDevelopment(): boolean {
   return process.env.NETLIFY_DEV === "true" || process.env.CONTEXT === "dev" || process.env.NODE_ENV === "development";
@@ -59,7 +61,11 @@ export function json(statusCode: number, body: unknown, headers: Record<string, 
 }
 
 export function requireAdmin(event: HandlerEvent): HandlerResponse | null {
-  if (!secret()) return json(500, { error: "ADMIN_SESSION_SECRET is not configured." });
+  if (!secret()) return json(500, { error: missingSessionSecretMessage });
   if (isAuthenticated(event)) return null;
   return json(401, { error: "Authentication required." });
+}
+
+export function missingSessionSecretError(): string {
+  return missingSessionSecretMessage;
 }

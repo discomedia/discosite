@@ -22,6 +22,15 @@ function normalizeSlug(slug: string): string {
   return `/${slug.replace(/^\/+|\/+$/g, "").toLowerCase().replace(/[^a-z0-9/-]+/g, "-")}`;
 }
 
+async function readJson(response: Response): Promise<Record<string, unknown>> {
+  const payload = await response.json().catch(() => ({}));
+  return payload && typeof payload === "object" && !Array.isArray(payload) ? payload as Record<string, unknown> : {};
+}
+
+function responseError(payload: Record<string, unknown>, fallback: string): string {
+  return typeof payload.error === "string" ? payload.error : fallback;
+}
+
 export function AdminApp() {
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
@@ -41,7 +50,7 @@ export function AdminApp() {
 
   async function loadPages(): Promise<boolean> {
     const response = await fetch("/.netlify/functions/pages", { credentials: "include" });
-    const payload = await response.json().catch(() => ({}));
+    const payload = await readJson(response);
 
     if (response.status === 401) {
       setAuthed(false);
@@ -52,8 +61,7 @@ export function AdminApp() {
     }
 
     if (!response.ok || !Array.isArray(payload.pages)) {
-      const error = typeof payload.error === "string" ? payload.error : "Unable to load admin content.";
-      setStatus(error);
+      setStatus(responseError(payload, "Unable to load admin content."));
       return false;
     }
 
@@ -78,8 +86,9 @@ export function AdminApp() {
       credentials: "include",
       body: JSON.stringify({ password }),
     });
+    const payload = await readJson(response);
     if (!response.ok) {
-      setStatus("Password was not accepted.");
+      setStatus(responseError(payload, "Password was not accepted."));
       return;
     }
     setPassword("");

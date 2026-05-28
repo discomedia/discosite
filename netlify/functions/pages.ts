@@ -7,6 +7,11 @@ export const handler: Handler = async (event) => {
   const unauthorized = requireAdmin(event);
   if (unauthorized) return unauthorized;
 
-  const pages = await allPages();
-  return json(200, { pages });
+  try {
+    const pages = await allPages();
+    return json(200, { pages });
+  } catch (error) {
+    console.error("Unable to load pages", error);
+    return json(500, { error: "Unable to load page content." });
+  }
 };
