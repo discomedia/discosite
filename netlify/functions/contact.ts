@@ -4,7 +4,13 @@ import { sendFormEmail, validateEmail } from "./_mail";
 
 export const handler: Handler = async (event) => {
   if (event.httpMethod !== "POST") return json(405, { error: "Method not allowed." });
-  const body = JSON.parse(event.body || "{}");
+  let body: Record<string, unknown>;
+  try {
+    body = JSON.parse(event.body || "{}") as Record<string, unknown>;
+  } catch {
+    return json(400, { error: "Invalid contact request." });
+  }
+
   const name = String(body.name || "").trim();
   const email = String(body.email || "").trim();
   const message = String(body.message || "").trim();

@@ -9,11 +9,22 @@ const storeName = "disco-media-pages";
 const localStoreDir = path.join(process.cwd(), ".netlify", "local-blobs", storeName);
 type LambdaBlobEvent = Parameters<typeof connectLambda>[0];
 
+class PageInputError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "PageInputError";
+  }
+}
+
 export function connectPageStore(event: HandlerEvent): void {
   const lambdaEvent = event as HandlerEvent & Partial<LambdaBlobEvent>;
   if (typeof lambdaEvent.blobs === "string") {
     connectLambda(lambdaEvent as LambdaBlobEvent);
   }
+}
+
+export function isPageInputError(error: unknown): error is PageInputError {
+  return error instanceof PageInputError;
 }
 
 function normalizeSlug(slug: string): string {
@@ -23,9 +34,9 @@ function normalizeSlug(slug: string): string {
 
 function validPage(input: Partial<PageRecord>): PageRecord {
   const slug = normalizeSlug(String(input.slug || ""));
-  if (!slug) throw new Error("Slug is required.");
-  if (!input.title) throw new Error("Title is required.");
-  if (!input.markdown) throw new Error("Markdown content is required.");
+  if (!slug) throw new PageInputError("Slug is required.");
+  if (!input.title) throw new PageInputError("Title is required.");
+  if (!input.markdown) throw new PageInputError("Markdown content is required.");
 
   return {
     slug,
@@ -94,7 +105,7 @@ export async function savePage(input: Partial<PageRecord>): Promise<PageRecord> 
 export async function deletePage(slug: string): Promise<void> {
   const normalized = normalizeSlug(slug);
   if (coreSlugs().includes(normalized)) {
-    throw new Error("Core pages cannot be deleted.");
+    throw new PageInputError("Core pages cannot be deleted.");
   }
 
   const seed = readSeedPages().find((page) => page.slug === normalized);

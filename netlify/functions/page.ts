@@ -1,17 +1,22 @@
 import type { Handler } from "@netlify/functions";
 import { isAuthenticated, json, requireAdmin } from "./_auth";
-import { connectPageStore, deletePage, findPage, savePage } from "./_pages";
+import { connectPageStore, deletePage, findPage, isPageInputError, savePage } from "./_pages";
 
 export const handler: Handler = async (event) => {
   connectPageStore(event);
 
   if (event.httpMethod === "GET") {
-    const slug = event.queryStringParameters?.slug || "/";
-    const page = await findPage(slug);
-    if (!page || (!page.published && !isAuthenticated(event))) {
-      return json(404, { error: "Page not found." });
+    try {
+      const slug = event.queryStringParameters?.slug || "/";
+      const page = await findPage(slug);
+      if (!page || (!page.published && !isAuthenticated(event))) {
+        return json(404, { error: "Page not found." });
+      }
+      return json(200, { page });
+    } catch (error) {
+      console.error("Unable to load page", error);
+      return json(500, { error: "Unable to load page content." });
     }
-    return json(200, { page });
   }
 
   const unauthorized = requireAdmin(event);
@@ -22,7 +27,11 @@ export const handler: Handler = async (event) => {
       const page = await savePage(JSON.parse(event.body || "{}"));
       return json(200, { page });
     } catch (error) {
-      return json(400, { error: error instanceof Error ? error.message : "Invalid page." });
+      if (error instanceof SyntaxError || isPageInputError(error)) {
+        return json(400, { error: error instanceof Error ? error.message : "Invalid page." });
+      }
+      console.error("Unable to save page", error);
+      return json(500, { error: "Unable to save page content." });
     }
   }
 
@@ -32,7 +41,11 @@ export const handler: Handler = async (event) => {
       await deletePage(slug);
       return json(200, { ok: true });
     } catch (error) {
-      return json(400, { error: error instanceof Error ? error.message : "Unable to delete page." });
+      if (isPageInputError(error)) {
+        return json(400, { error: error.message });
+      }
+      console.error("Unable to delete page", error);
+      return json(500, { error: "Unable to delete page content." });
     }
   }
 
