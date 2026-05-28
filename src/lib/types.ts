@@ -14,4 +14,20 @@ export type PageInput = Omit<PageRecord, "updatedAt"> & {
   updatedAt?: string;
 };
 
+export type MenuArea = "primary" | "headerCta" | "footer";
+
+export type MenuItemRecord = {
+  id: string;
+  label: string;
+  url: string;
+  area: MenuArea;
+  order: number;
+  published: boolean;
+  updatedAt?: string;
+};
+
+export type MenuInput = Omit<MenuItemRecord, "updatedAt"> & {
+  updatedAt?: string;
+};
+
 export type FormState = "idle" | "submitting" | "success" | "error";

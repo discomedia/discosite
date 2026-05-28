@@ -7,7 +7,8 @@ Astro site for Disco Media, a Melbourne-based media company. The site is built w
 - Static Astro pages for the core site routes.
 - Markdown-backed seed content in `src/content/pages`.
 - Dynamic page rendering through `/.netlify/functions/page`.
-- Password-protected `/admin` interface for creating, editing, publishing, and deleting pages.
+- Password-protected `/admin` interface for creating, editing, publishing, and deleting pages, including nested paths like `/portfolio/app1`.
+- Admin-managed primary navigation, header button, and footer menu items.
 - Netlify Blobs storage for CMS page overrides, with a local fallback under `.netlify/local-blobs` during development.
 - Contact and support forms delivered through Resend.
 - Sitemap, robots.txt, canonical metadata, Open Graph tags, and Netlify deploy configuration.
@@ -81,7 +82,7 @@ The admin UI is available at:
 
 ## Content
 
-Seed pages live in `src/content/pages/*.md`. Each page uses frontmatter with this shape:
+Seed pages live in `src/content/pages/*.md`. Each page uses frontmatter with this shape. Slugs can be nested paths, such as `/portfolio/app1`.
 
 ```yaml
 ---
@@ -102,7 +103,7 @@ Core seed pages are:
 - `/support`
 - `/privacy`
 
-The admin interface stores edited pages in Netlify Blobs. Locally, when Netlify Blobs is not available, page overrides are written to `.netlify/local-blobs/disco-media-pages`.
+The admin interface stores edited pages and menu items in Netlify Blobs. Locally, when Netlify Blobs is not available, page overrides are written to `.netlify/local-blobs/disco-media-pages` and menu edits are written to `.netlify/local-blobs/disco-media-menu`.
 
 ## Scripts
 

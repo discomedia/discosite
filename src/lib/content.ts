@@ -1,13 +1,19 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import type { PageRecord } from "./types";
+import type { MenuItemRecord, PageRecord } from "./types";
 
 const pagesDir = path.join(process.cwd(), "src", "content", "pages");
 
 function normalizeSlug(slug: string): string {
   if (!slug || slug === "/") return "/";
-  return `/${slug.replace(/^\/+|\/+$/g, "")}`;
+  const segments = slug
+    .trim()
+    .replace(/^\/+|\/+$/g, "")
+    .split("/")
+    .map((segment) => segment.trim())
+    .filter(Boolean);
+  return segments.length ? `/${segments.join("/")}` : "/";
 }
 
 export function slugToKey(slug: string): string {
@@ -53,6 +59,70 @@ export function findSeedPage(slug: string): PageRecord | undefined {
 
 export function publicSeedPages(): PageRecord[] {
   return readSeedPages().filter((page) => page.published);
+}
+
+export function seedMenuItems(pages: PageRecord[] = publicSeedPages()): MenuItemRecord[] {
+  const publishedPages = pages.filter((page) => page.published).sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
+  const pageMenuItems = publishedPages.map((page) => ({
+    id: `primary-${slugToKey(page.slug)}`,
+    label: page.navLabel,
+    url: page.slug,
+    area: "primary" as const,
+    order: page.order,
+    published: true,
+  }));
+
+  return [
+    ...pageMenuItems,
+    {
+      id: "primary-admin",
+      label: "Admin",
+      url: "/admin",
+      area: "primary",
+      order: 99,
+      published: true,
+    },
+    {
+      id: "header-cta-contact",
+      label: "Contact",
+      url: "/contact",
+      area: "headerCta",
+      order: 1,
+      published: true,
+    },
+    {
+      id: "footer-contact",
+      label: "Contact",
+      url: "/contact",
+      area: "footer",
+      order: 1,
+      published: true,
+    },
+    {
+      id: "footer-support",
+      label: "Support",
+      url: "/support",
+      area: "footer",
+      order: 2,
+      published: true,
+    },
+    {
+      id: "footer-privacy",
+      label: "Privacy",
+      url: "/privacy",
+      area: "footer",
+      order: 3,
+      published: true,
+    },
+    {
+      id: "footer-admin",
+      label: "Admin",
+      url: "/admin",
+      area: "footer",
+      order: 99,
+      published: true,
+    },
+  ];
 }
 
 export function coreSlugs(): string[] {

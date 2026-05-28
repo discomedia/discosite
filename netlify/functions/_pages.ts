@@ -29,12 +29,20 @@ export function isPageInputError(error: unknown): error is PageInputError {
 
 function normalizeSlug(slug: string): string {
   if (!slug || slug === "/") return "/";
-  return `/${slug.replace(/^\/+|\/+$/g, "").toLowerCase().replace(/[^a-z0-9/-]+/g, "-")}`;
+  const segments = slug
+    .trim()
+    .replace(/^\/+|\/+$/g, "")
+    .split("/")
+    .map((segment) => segment.trim().toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, ""))
+    .filter(Boolean);
+  return segments.length ? `/${segments.join("/")}` : "/";
 }
 
 function validPage(input: Partial<PageRecord>): PageRecord {
-  const slug = normalizeSlug(String(input.slug || ""));
-  if (!slug) throw new PageInputError("Slug is required.");
+  const rawSlug = String(input.slug || "").trim();
+  if (!rawSlug) throw new PageInputError("Slug is required.");
+  const slug = normalizeSlug(rawSlug);
+  if (slug === "/" && rawSlug !== "/") throw new PageInputError("Slug is required.");
   if (!input.title) throw new PageInputError("Title is required.");
   if (!input.markdown) throw new PageInputError("Markdown content is required.");
 
