@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "dev:pages": "npm run build && wrangler pages dev dist",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.functions.json",
+    "typecheck": "astro sync && tsc --noEmit && tsc --noEmit -p tsconfig.functions.json",
     "test": "vitest run",
     "snapshot:netlify-cms": "node scripts/migrate-netlify-cms.mjs --snapshot-only",
     "migrate:netlify-cms": "node scripts/migrate-netlify-cms.mjs"
