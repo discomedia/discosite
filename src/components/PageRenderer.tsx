@@ -148,7 +148,7 @@ export function PageRenderer({ page, mode = "article", live = true }: PageRender
 
   useEffect(() => {
     if (!live) return;
-    const url = `/.netlify/functions/page?slug=${encodeURIComponent(page.slug)}`;
+    const url = `/api/page?slug=${encodeURIComponent(page.slug)}`;
     fetch(url)
       .then((response) => (response.ok ? response.json() : null))
       .then((payload) => {
@@ -167,7 +167,7 @@ export function DynamicPageRenderer() {
 
   useEffect(() => {
     const slug = window.location.pathname;
-    fetch(`/.netlify/functions/page?slug=${encodeURIComponent(slug)}`)
+    fetch(`/api/page?slug=${encodeURIComponent(slug)}`)
       .then((response) => (response.ok ? response.json() : null))
       .then((payload) => {
         if (payload?.page?.published) {

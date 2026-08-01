@@ -12,7 +12,7 @@ type FormConfig = {
 
 const configs: Record<FormKind, FormConfig> = {
   contact: {
-    endpoint: "/.netlify/functions/contact",
+    endpoint: "/api/contact",
     fields: [
       { name: "name", label: "Name", placeholder: "Your name" },
       { name: "email", label: "Email", type: "email", placeholder: "you@example.com" },
@@ -20,7 +20,7 @@ const configs: Record<FormKind, FormConfig> = {
     ],
   },
   support: {
-    endpoint: "/.netlify/functions/support",
+    endpoint: "/api/support",
     fields: [
       { name: "name", label: "Name", placeholder: "Your name" },
       { name: "email", label: "Email", type: "email", placeholder: "you@example.com" },

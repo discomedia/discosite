@@ -115,6 +115,14 @@ export function seedMenuItems(pages: PageRecord[] = publicSeedPages()): MenuItem
       published: true,
     },
     {
+      id: "footer-terms",
+      label: "Terms",
+      url: "/terms",
+      area: "footer",
+      order: 4,
+      published: true,
+    },
+    {
       id: "footer-admin",
       label: "Admin",
       url: "/admin",
@@ -126,5 +134,5 @@ export function seedMenuItems(pages: PageRecord[] = publicSeedPages()): MenuItem
 }
 
 export function coreSlugs(): string[] {
-  return ["/", "/contact", "/support", "/privacy"];
+  return ["/", "/contact", "/support", "/privacy", "/terms"];
 }

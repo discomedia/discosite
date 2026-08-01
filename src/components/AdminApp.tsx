@@ -15,7 +15,7 @@ const emptyPage: PageRecord = {
   markdown: "# New page\n\nWrite the page content here.",
 };
 
-const coreSlugs = new Set(["/", "/contact", "/support", "/privacy"]);
+const coreSlugs = new Set(["/", "/contact", "/support", "/privacy", "/terms"]);
 const menuAreaLabels: Record<MenuArea, string> = {
   primary: "Primary nav",
   headerCta: "Header button",
@@ -105,8 +105,8 @@ export function AdminApp() {
 
   async function loadAdminData(): Promise<boolean> {
     const [pagesResponse, menuResponse] = await Promise.all([
-      fetch("/.netlify/functions/pages", { credentials: "include" }),
-      fetch("/.netlify/functions/menu", { credentials: "include" }),
+      fetch("/api/pages", { credentials: "include" }),
+      fetch("/api/menu", { credentials: "include" }),
     ]);
     const pagesPayload = await readJson(pagesResponse);
     const menuPayload = await readJson(menuResponse);
@@ -149,7 +149,7 @@ export function AdminApp() {
   async function signIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus("Signing in...");
-    const response = await fetch("/.netlify/functions/admin-login", {
+    const response = await fetch("/api/admin-login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -209,7 +209,7 @@ export function AdminApp() {
     setSaving(true);
     setStatus("Saving menu...");
     const normalizedItems = normalizeMenuOrders(nextItems);
-    const response = await fetch("/.netlify/functions/menu", {
+    const response = await fetch("/api/menu", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -272,7 +272,7 @@ export function AdminApp() {
     setSaving(true);
     setStatus("Saving...");
     const payload = { ...draft, slug: normalizeSlug(draft.slug), updatedAt: new Date().toISOString() };
-    const response = await fetch("/.netlify/functions/page", {
+    const response = await fetch("/api/page", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -295,7 +295,7 @@ export function AdminApp() {
     if (!draft || coreSlugs.has(draft.slug)) return;
     setSaving(true);
     setStatus("Deleting...");
-    const response = await fetch(`/.netlify/functions/page?slug=${encodeURIComponent(draft.slug)}`, {
+    const response = await fetch(`/api/page?slug=${encodeURIComponent(draft.slug)}`, {
       method: "DELETE",
       credentials: "include",
     });

@@ -7,13 +7,15 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "netlify:dev": "netlify dev"
+    "dev:pages": "npm run build && wrangler pages dev dist",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.functions.json",
+    "test": "vitest run",
+    "snapshot:netlify-cms": "node scripts/migrate-netlify-cms.mjs --snapshot-only",
+    "migrate:netlify-cms": "node scripts/migrate-netlify-cms.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.2",
     "@discomedia/utils": "^1.0.80",
-    "@netlify/blobs": "^10.7.11",
-    "@netlify/functions": "^5.3.0",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.1.6",
     "gray-matter": "^4.0.3",
@@ -21,14 +23,14 @@
     "marked": "^18.0.7",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "resend": "^6.18.1",
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
-    "netlify-cli": "^27.0.1",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.0",
+    "wrangler": "^4.118.0"
   }
 }

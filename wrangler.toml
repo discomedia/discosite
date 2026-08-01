@@ -1,0 +1,14 @@
+name = "disco-media-site"
+compatibility_date = "2026-07-31"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "dist"
+
+[[kv_namespaces]]
+binding = "DISCO_MEDIA_CMS"
+id = "b33bda0fe3d44bd29046349836557109"
+
+[env.preview]
+
+[[env.preview.kv_namespaces]]
+binding = "DISCO_MEDIA_CMS"
+id = "4ab2ba0da89842a79aaf8d4fe5cd81a0"

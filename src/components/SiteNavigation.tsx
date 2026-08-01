@@ -20,7 +20,7 @@ function useMenuItems(fallbackItems: MenuItemRecord[]): MenuItemRecord[] {
   const [items, setItems] = useState(fallbackItems);
 
   useEffect(() => {
-    fetch("/.netlify/functions/menu")
+    fetch("/api/menu")
       .then((response) => (response.ok ? response.json() : null))
       .then((payload) => {
         if (Array.isArray(payload?.items)) setItems(payload.items);
