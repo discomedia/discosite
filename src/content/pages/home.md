@@ -20,13 +20,13 @@ Disco Media creates and operates blogs, reference sites, and apps that help peop
 
 ## Where we create impact
 
-| Sector | What we build |
-| --- | --- |
-| Travel | Destination guides, itineraries, and practical resources for modern explorers. |
-| Language Learning | Apps, lessons, and reference tools that help learners speak with confidence. |
-| Automotive | Expert advice, reviews, and resources for car owners and enthusiasts. |
-| Luxury Real Estate | Market insight and listings for discerning buyers and investors. |
-| Home Improvement | Guides and ideas to help people build, improve, and maintain their homes. |
+| Sector             | What we build                                                                  |
+| ------------------ | ------------------------------------------------------------------------------ |
+| Travel             | Destination guides, itineraries, and practical resources for modern explorers. |
+| Language Learning  | Apps, lessons, and reference tools that help learners speak with confidence.   |
+| Automotive         | Advice, reviews, and resources for car owners and enthusiasts.                 |
+| Luxury Real Estate | Market insight and listings for discerning buyers and investors.               |
+| Home Improvement   | Guides and ideas to help people build, improve, and maintain their homes.      |
 
 ## Let's connect
 

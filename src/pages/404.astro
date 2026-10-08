@@ -1,16 +1,22 @@
 ---
 import SiteLayout from "../components/SiteLayout.astro";
-import { DynamicPageRenderer } from "../components/PageRenderer";
-import { publicSeedPages } from "../lib/content";
-
-const pages = publicSeedPages();
 ---
 
 <SiteLayout
-  title="Disco Media"
-  description="Disco Media creates and operates global media products."
-  path={Astro.url.pathname}
-  pages={pages}
+  title="Page not found | Disco Media"
+  description="This page could not be found. Explore Disco Media’s projects or get in touch."
+  path="/404/"
 >
-  <DynamicPageRenderer client:load />
+  <main id="main" class="shell contact-page">
+    <p class="eyebrow">404 / A small detour</p>
+    <h1>
+      A little off course<span class="accent-dot">.</span>
+    </h1>
+    <p class="intro">
+      That page has moved or doesn’t exist. Let’s get you somewhere interesting.
+    </p>
+    <a class="button" href="/">
+      Back to home <span aria-hidden="true">↗</span>
+    </a>
+  </main>
 </SiteLayout>

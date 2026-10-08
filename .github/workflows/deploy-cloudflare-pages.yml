@@ -18,9 +18,8 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npm test
       - run: npm run typecheck
-      - run: npm run build
+      - run: npm test
 
   deploy:
     needs: validate

@@ -8,29 +8,18 @@
     "build": "astro build",
     "preview": "astro preview",
     "dev:pages": "npm run build && wrangler pages dev dist",
-    "typecheck": "astro sync && tsc --noEmit && tsc --noEmit -p tsconfig.functions.json",
-    "test": "vitest run",
-    "snapshot:netlify-cms": "node scripts/migrate-netlify-cms.mjs --snapshot-only",
-    "migrate:netlify-cms": "node scripts/migrate-netlify-cms.mjs"
+    "typecheck": "astro check && tsc --noEmit",
+    "test": "npm run build && node --test test/static-site.test.mjs"
   },
   "dependencies": {
-    "@astrojs/react": "^6.0.2",
-    "@discomedia/utils": "^1.0.80",
-    "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.1.6",
     "gray-matter": "^4.0.3",
-    "lucide-react": "^1.28.0",
-    "marked": "^18.0.7",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "tailwindcss": "^4.3.3"
+    "marked": "^18.0.7"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
-    "typescript": "^7.0.2",
-    "vitest": "^4.1.0",
-    "wrangler": "^4.118.0"
+    "typescript": "^6.0.3",
+    "wrangler": "^4.118.0",
+    "@astrojs/check": "^0.9.9"
   }
 }

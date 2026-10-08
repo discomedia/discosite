@@ -1,149 +1,38 @@
-# Disco Media Site
+# Disco Media
 
-Astro site for Disco Media, a Melbourne-based media company. The site is built with Astro, React islands, Tailwind CSS, Cloudflare Pages Functions, Cloudflare KV, and Disco Mail-powered contact/support forms.
+A static Astro site for Disco Media, an independent media and product company based in Melbourne. Hosted on Cloudflare Pages. Content, navigation, screenshots, and branding are version-controlled; there is no CMS, admin login, database, KV binding, Pages Function, or runtime secret.
 
-## Features
+## Develop and verify
 
-- Static Astro pages for the core site routes.
-- Markdown-backed seed content in `src/content/pages`.
-- Dynamic page rendering through `/api/page` and Pages Functions.
-- Password-protected `/admin` interface for creating, editing, publishing, and deleting pages, including nested paths like `/portfolio/app1`.
-- Admin-managed primary navigation, header button, and footer menu items.
-- Cloudflare KV storage for CMS pages and menu items, with a local KV simulator during development.
-- Contact and support forms delivered through Disco Mail.
-- Sitemap, robots.txt, canonical metadata, Open Graph tags, terms, and Cloudflare Pages deployment configuration.
+Use Node.js 24 or newer and npm.
 
-## Tech Stack
-
-- [Astro](https://astro.build/)
-- React 19
-- Tailwind CSS 4
-- Cloudflare Pages Functions
-- Cloudflare KV
-- [Disco Mail](https://mail.discomedia.co)
-
-## Project Structure
-
-```text
-src/pages/                 Astro routes
-src/components/            Astro and React UI components
-src/content/pages/         Markdown seed pages
-src/lib/                   Content, markdown, and shared types
-functions/                 Cloudflare Pages admin, CMS, contact, and support functions
-public/                    Static assets, headers, and robots.txt
-```
-
-## Requirements
-
-- Node.js 22 or compatible current LTS
-- npm
-- Wrangler for local Pages Function development
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-## Environment Variables
-
-Create a local `.env` file from `.env.example`. Configure the runtime values as Cloudflare Pages secrets; do not commit them.
-
-```bash
-ADMIN_PASSWORD="replace-me"
-ADMIN_SESSION_SECRET="replace-me-with-a-long-random-string"
-DISCO_MAIL_API_KEY="..."
-CONTACT_TO_EMAIL="hello@example.com"
-CONTACT_FROM_EMAIL="Disco Media <hello@example.com>"
-CLOUDFLARE_ACCOUNT_ID="..."
-CLOUDFLARE_API_TOKEN="..."
-```
-
-`ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET` are required for `/admin`. `DISCO_MAIL_API_KEY`, `CONTACT_TO_EMAIL`, and `CONTACT_FROM_EMAIL` are required for form delivery. CMS data is stored in the `DISCO_MEDIA_CMS` KV binding, which is configured on the Pages project and never committed.
-
-## Development
-
-Run the Astro dev server:
-
-```bash
+```sh
+npm ci
 npm run dev
+npm run typecheck
+npm test
 ```
 
-Run the Pages dev server when testing functions, forms, dynamic pages, or the admin interface:
+`npm test` builds the site and checks public routes, local assets and links, the complete portfolio, preserved legal content, and removal of the CMS runtime. `npm run preview` previews the production output. `npm run dev:pages` checks Cloudflare's static routing and redirects locally.
 
-```bash
-npm run dev:pages
-```
+## Make updates
 
-The admin UI is available at:
+- Home: `src/pages/index.astro`
+- Portfolio: `src/data/projects.ts`. Add or update the project metadata and a real screenshot at `public/images/projects/<slug>.webp`. Both the home page and complete portfolio use the same list.
+- Page layouts and navigation: `src/components/SiteLayout.astro`
+- Design: `src/styles.css`
+- Brand: `public/images/disco-globe.svg`. The header, footer, and hero use this same artwork. Keep `public/favicon.svg` identical when updating the mark.
+- Legal policies: `src/content/pages/privacy.md` and `terms.md`, rendered at build time.
+- Contact and support: static email links to `info@discomedia.co` and `support@discomedia.co`.
 
-```text
-/admin
-```
+Screenshots were captured from the public project sites on 8 October 2026. Absolute Timer uses its actual iPhone screenshot from the app repository. Disco Mail's public screen is its sign-in page. The portfolio links use the current public origins, including `bananastandapp.com`, `papertigerapp.com`, the existing FinePredict Netlify origin, and Absolute Timer's App Store listing. Screenshots are served locally, not fetched on demand.
 
-## Content
-
-Seed pages live in `src/content/pages/*.md`. Each page uses frontmatter with this shape. Slugs can be nested paths, such as `/portfolio/app1`.
-
-```yaml
----
-slug: "/example"
-title: "Example"
-navLabel: "Example"
-seoTitle: "Example | Disco Media"
-description: "Short SEO description."
-order: 10
-published: true
----
-```
-
-Core seed pages are:
-
-- `/`
-- `/contact`
-- `/support`
-- `/privacy`
-
-The admin interface stores edited pages and menu items in Cloudflare KV. `npm run dev:pages` creates an isolated local KV simulator under `.wrangler/`.
-
-## Scripts
-
-```bash
-npm run dev          # Start Astro dev server
-npm run build        # Build production output into dist/
-npm run preview      # Preview the production build locally
-npm run dev:pages    # Start Pages dev with functions and local KV
-npm run typecheck    # Typecheck browser and Pages code
-npm test             # Run CMS, auth, and Disco Mail unit tests
-npm run snapshot:netlify-cms # Back up the legacy live CMS before cutover
-npm run migrate:netlify-cms  # Import the backup data into the bound KV namespace
-```
+Inter is self-hosted under `public/fonts` with its SIL Open Font License. The graphic is an SVG with projected mirror facets and continent shapes; motion respects `prefers-reduced-motion`.
 
 ## Deployment
 
-The site deploys to Cloudflare Pages:
+The existing GitHub Actions workflow validates changes and deploys `master` to the `disco-media-site` Cloudflare Pages project. Pull requests receive preview deployments. Build command: `npm run build`; output directory: `dist`.
 
-- Build command: `npm run build`
-- Publish directory: `dist`
-- Functions directory: `functions`
-- Production branch: `master`
-- GitHub Actions validates each push and deploys `master`; pull requests receive preview deployments.
+Only `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` are needed for deployment (GitHub secrets or local `.env`). There are no runtime environment variables. The Cloudflare zone redirect in `cloudflare/www-redirect.json` handles www-to-apex routing, preserving paths and query strings. It runs before Pages and needs no Function. A real `404.html` prevents removed admin/API routes from falling back to the home page.
 
-Published CMS paths are resolved by the Pages catch-all Function and served with the existing dynamic Astro shell. Static routes and assets are served by the Pages `ASSETS` binding.
-
-## Cloudflare setup and cutover
-
-1. Create the Pages project with `npx wrangler pages project create disco-media-site --production-branch master --compatibility-date 2026-07-31 --compatibility-flag nodejs_compat`.
-2. Create separate production and preview KV namespaces (this project uses `DISCO_MEDIA_CMS` and `DISCO_MEDIA_CMS_PREVIEW`); bind each to `DISCO_MEDIA_CMS` in the matching Pages deployment environment.
-3. Set the five runtime values from `.env.example` as Pages secrets and set `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` as GitHub repository secrets.
-4. Run `npm run snapshot:netlify-cms`, set `DISCO_MEDIA_CMS_NAMESPACE_ID`, then run `npm run migrate:netlify-cms`. Keep the ignored `.local/migration-backups/` snapshot until Netlify is retired.
-5. Deploy a preview, validate `/`, `/portfolio`, `/admin`, `/terms`, both forms, sitemap, and robots, then add `discomedia.co` and `www.discomedia.co` as Pages domains. `www` is redirected to the apex by middleware.
-6. After production verification succeeds, detach the domain from Netlify and delete the old Netlify site, functions, blobs, variables, and build hook.
-
-## Verification
-
-Before deploying, run:
-
-```bash
-npm test && npm run typecheck && npm run build
-```
+The migration preserved the latest published privacy and terms content. A snapshot of the live CMS is retained locally in the ignored `.local/redesign/published-cms-backup.json`; the historical KV namespace can be retained as a backup but is no longer bound to or used by the site. Old CMS and mail secrets are no longer referenced.

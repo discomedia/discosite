@@ -1,0 +1,14 @@
+---
+type Props = { compact?: boolean };
+const { compact = false } = Astro.props;
+---
+
+<span class="brand">
+  <img src="/images/disco-globe.svg" alt="" width="64" height="61" />
+  {!compact && (
+    <span>
+      disco<span class="brand-light">media</span>
+      <span class="brand-dot">.</span>
+    </span>
+  )}
+</span>

@@ -1,0 +1,12 @@
+---
+import { marked } from "marked";
+import type { PageRecord } from "../lib/types";
+type Props = { page: PageRecord };
+const { page } = Astro.props;
+const html = marked.parse(page.markdown, { async: false });
+---
+
+<main id="main" class="shell article-shell">
+  <p class="eyebrow">Disco Media / {page.title}</p>
+  <article class="prose-disco" set:html={html} />
+</main>

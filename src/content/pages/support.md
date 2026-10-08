@@ -10,4 +10,4 @@ published: true
 
 # Support
 
-Need help with a product or site issue? Let us know the details and our support team will respond as soon as possible.
+Need help with a Disco Media product or site issue? Email us at support@discomedia.co with the details and we’ll respond as soon as possible.

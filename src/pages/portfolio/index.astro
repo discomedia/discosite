@@ -1,0 +1,40 @@
+---
+import SiteLayout from "../../components/SiteLayout.astro";
+import ProjectGrid from "../../components/ProjectGrid.astro";
+import ContactBanner from "../../components/ContactBanner.astro";
+import { projects } from "../../data/projects";
+---
+
+<SiteLayout
+  title="Our projects | Disco Media"
+  description="Explore Disco Media’s websites, apps, and tools for travel, languages, motorcycles, research, and more."
+  path="/portfolio/"
+>
+  <main id="main">
+    <section class="shell portfolio-intro">
+      <div>
+        <p class="eyebrow">The Disco Media portfolio</p>
+        <h1>
+          A world of
+          <br />
+          good projects<span class="accent-dot">.</span>
+        </h1>
+      </div>
+      <div>
+        <p class="intro">
+          Different interests. The same curiosity.
+          <br />
+          Explore the things we’re building, publishing, and putting out into
+          the world.
+        </p>
+        <span class="portfolio-count">
+          {String(projects.length).padStart(2, "0")} projects / Keep exploring ↓
+        </span>
+      </div>
+    </section>
+    <section class="shell portfolio-work" aria-label="All projects">
+      <ProjectGrid projects={projects} />
+    </section>
+    <ContactBanner />
+  </main>
+</SiteLayout>
