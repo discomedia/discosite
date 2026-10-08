@@ -11,8 +11,11 @@ const routes = [
   "privacy/index.html",
   "terms/index.html",
   "404.html",
+  "projects/learn-just-enough/index.html",
+  "projects/skyfighter/index.html",
+  "projects/roy/index.html",
 ];
-test("all public routes render complete content without a CMS or browser runtime", () => {
+test("all public routes render complete content without a CMS or framework runtime", () => {
   for (const route of routes) {
     const html = read(route);
     assert.match(html, /<main id="main"/);
@@ -28,13 +31,13 @@ test("all public routes render complete content without a CMS or browser runtime
   assert.equal(fs.existsSync("dist/_worker.js"), false);
   assert.equal(fs.existsSync("functions"), false);
 });
-test("portfolio contains thirteen distinct working project links and local screenshots", () => {
+test("portfolio contains 22 distinct project links and real local screenshots", () => {
   const html = read("portfolio/index.html");
   const links = [
     ...html.matchAll(/class="project-card"[^>]*href="([^"]+)"/g),
   ].map((match) => match[1]);
-  assert.equal(links.length, 13);
-  assert.equal(new Set(links).size, 13);
+  assert.equal(links.length, 22);
+  assert.equal(new Set(links).size, 22);
   assert.ok(links.includes("https://bananastandapp.com"));
   assert.ok(
     links.includes("https://apps.apple.com/app/absolute-timer/id6755406554"),
@@ -42,7 +45,7 @@ test("portfolio contains thirteen distinct working project links and local scree
   const images = [...html.matchAll(/src="(\/images\/projects\/[^\"]+)"/g)].map(
     (match) => match[1],
   );
-  assert.equal(images.length, 13);
+  assert.equal(images.length, 21);
   for (const image of images)
     assert.ok(fs.statSync(path.join("dist", image)).size > 1000, image);
 });
@@ -77,4 +80,21 @@ test("legal copy, contact destinations, sitemap, and shared brand survive the mi
   assert.equal(redirect.expression, 'http.host eq "www.discomedia.co"');
   assert.equal(redirect.action_parameters.from_value.status_code, 301);
   assert.equal(redirect.action_parameters.from_value.preserve_query_string, true);
+});
+
+// Interactive filtering must leave the complete portfolio in static HTML.
+test("portfolio exposes all four accessible filters and every requested project", () => {
+  const html = read("portfolio/index.html");
+  for (const value of ["all", "apps", "sites", "other"])
+    assert.match(html, new RegExp(`type="radio"[^>]*value="${value}"`));
+  assert.match(html, /<legend class="sr-only">Filter projects<\/legend>/);
+  assert.match(html, /aria-live="polite"/);
+  const counts = Object.fromEntries(["apps", "sites", "other"].map(type => [type, [...html.matchAll(new RegExp(`data-project-type="${type}"`, "g"))].length]));
+  assert.deepEqual(counts, { apps: 13, sites: 5, other: 4 });
+  for (const name of ["Grandmaster Flash", "Mailer Choice", "Skyfighter", "Disco HQ", "Roy", "Cover Artist", "Salsa Machine", "Disco TTS", "Disco Media Utils"])
+    assert.ok(html.includes(`<h3>${name}</h3>`), name);
+  assert.match(html, /npm install/);
+  assert.match(html, /href="\/projects\/learn-just-enough\/"/);
+  for (const slug of ["learn-just-enough", "skyfighter", "roy"])
+    assert.match(read(`projects/${slug}/index.html`), /a public download is not available yet/);
 });

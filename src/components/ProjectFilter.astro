@@ -1,0 +1,41 @@
+---
+import type { Project } from "../data/projects";
+type Props = { projects: Project[] };
+const { projects } = Astro.props;
+const filters = ["All", "Apps", "Sites", "Other"];
+---
+
+<div class="portfolio-controls" data-project-filter hidden>
+  <fieldset class="project-filter">
+    <legend class="sr-only">Filter projects</legend>
+    <span class="filter-slider" aria-hidden="true"></span>
+    {filters.map((label, index) => (
+      <label class="filter-option">
+        <input type="radio" name="project-filter" value={label.toLowerCase()} checked={index === 0} aria-controls="portfolio-projects" />
+        <span>{label}</span>
+      </label>
+    ))}
+  </fieldset>
+  <p class="filter-count" role="status" aria-live="polite" aria-atomic="true">Showing all {projects.length} projects</p>
+</div>
+
+<script>
+  const controls = document.querySelector<HTMLElement>("[data-project-filter]");
+  const cards = [...document.querySelectorAll<HTMLElement>("#portfolio-projects .project-card")];
+  if (controls && cards.length) {
+    const filter = controls.querySelector<HTMLElement>(".project-filter")!;
+    const count = controls.querySelector<HTMLElement>(".filter-count")!;
+    const options = [...controls.querySelectorAll<HTMLInputElement>("input")];
+    const update = () => {
+      const selected = options.findIndex(option => option.checked);
+      const value = options[selected].value;
+      for (const card of cards) card.hidden = value !== "all" && card.dataset.projectType !== value;
+      filter.style.setProperty("--filter-index", String(selected));
+      const shown = cards.filter(card => !card.hidden).length;
+      count.textContent = value === "all" ? `Showing all ${shown} projects` : `Showing ${shown} ${value === "other" ? "plugins & tools" : value}`;
+    };
+    for (const option of options) option.addEventListener("change", update);
+    update();
+    controls.hidden = false;
+  }
+</script>

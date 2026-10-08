@@ -1,6 +1,7 @@
 ---
 import SiteLayout from "../../components/SiteLayout.astro";
 import ProjectGrid from "../../components/ProjectGrid.astro";
+import ProjectFilter from "../../components/ProjectFilter.astro";
 import ContactBanner from "../../components/ContactBanner.astro";
 import { projects } from "../../data/projects";
 ---
@@ -32,8 +33,9 @@ import { projects } from "../../data/projects";
         </span>
       </div>
     </section>
-    <section class="shell portfolio-work" aria-label="All projects">
-      <ProjectGrid projects={projects} />
+    <section class="shell portfolio-work" aria-label="Projects">
+      <ProjectFilter projects={projects} />
+      <div id="portfolio-projects"><ProjectGrid projects={projects} /></div>
     </section>
     <ContactBanner />
   </main>

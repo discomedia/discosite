@@ -1,6 +1,7 @@
 import { publicSeedPages } from "../lib/content";
+import { projects } from "../data/projects";
 export function GET() {
-  const paths = [...publicSeedPages().map((page) => page.slug), "/portfolio"];
+  const paths = [...publicSeedPages().map((page) => page.slug), "/portfolio", ...projects.filter(project => project.overview).map(project => `/projects/${project.slug}`)];
   const urls = [...new Set(paths)]
     .map(
       (path) =>

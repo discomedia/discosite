@@ -8,32 +8,41 @@ const { projects } = Astro.props;
   {projects.map((project, index) => (
     <a
       class="project-card"
+      data-project-type={project.type}
       href={project.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`${project.name} — visit ${project.format.toLowerCase()} (opens in a new tab)`}
+      target={project.url.startsWith("https:") ? "_blank" : undefined}
+      rel={project.url.startsWith("https:") ? "noopener noreferrer" : undefined}
+      aria-label={`${project.name}${project.url.startsWith("https:") ? " (opens in a new tab)" : " — project details"}`}
     >
       <div
         class:list={[
           "project-screen",
-          { "phone-screen": project.slug === "absolute-timer" },
+          { "phone-screen": project.visual === "phone", "panel-screen": project.visual === "panel", "code-screen": project.visual === "code" },
         ]}
         style={`--card-color: ${project.color}`}
       >
         <div class="browser-frame">
           <div class="browser-toolbar" aria-hidden="true">
             <span class="browser-dots">● ● ●</span>
-            <span>{new URL(project.url).hostname}</span>
+            <span>{project.visual === "code" ? "@discomedia/utils" : new URL(project.url, Astro.site).hostname}</span>
             <span>↗</span>
           </div>
-          <img
+          {project.visual === "code" ? (
+            <div class="code-preview" aria-label="Install Disco Media Utils from npm">
+              <span class="code-comment">// Small utilities. Big possibilities.</span>
+              <code><span class="code-prompt">$</span> npm install<br /><strong>@discomedia/utils</strong></code>
+              <div class="code-rule"></div>
+              <code><span class="code-keyword">import</span> {"{ disco }"}<br /><span class="code-keyword">from</span> <span class="code-string">'@discomedia/utils'</span>;</code>
+              <span class="code-comment">AI · Email · Market data · TypeScript</span>
+            </div>
+          ) : (<img
             src={`/images/projects/${project.slug}.webp`}
             alt={`Screenshot of ${project.name}`}
-            width={project.slug === "absolute-timer" ? 460 : 1200}
-            height={project.slug === "absolute-timer" ? 1000 : 833}
+            width={project.imageWidth ?? 1200}
+            height={project.imageHeight ?? 833}
             loading="lazy"
             decoding="async"
-          />
+          />)}
         </div>
         <span class="project-format">{project.format}</span>
       </div>

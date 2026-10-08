@@ -1,4 +1,4 @@
-// Public project links and real screenshots, verified 8 October 2026.
+// Project metadata and screenshot sources are maintained in README.md.
 // Add a project here and its screenshot in public/images/projects/.
 export type Project = {
   slug: string;
@@ -8,10 +8,18 @@ export type Project = {
   url: string;
   color: string;
   format: string;
+  type: "apps" | "sites" | "other";
+  visual?: "phone" | "panel" | "code";
+  overview?: string;
+  imageWidth?: number;
+  imageHeight?: number;
 };
 export const projects: Project[] = [
   {
     slug: "discover-discomfort",
+    imageWidth: 1200,
+    imageHeight: 833,
+    type: "sites",
     name: "Discover Discomfort",
     category: "Travel & culture",
     description:
@@ -22,6 +30,10 @@ export const projects: Project[] = [
   },
   {
     slug: "detour",
+    imageWidth: 646,
+    imageHeight: 1400,
+    type: "apps",
+    visual: "phone",
     name: "Detour",
     category: "Travel & maps",
     description:
@@ -32,6 +44,9 @@ export const projects: Project[] = [
   },
   {
     slug: "motofomo",
+    imageWidth: 1200,
+    imageHeight: 833,
+    type: "sites",
     name: "Motofomo",
     category: "Motorcycles",
     description:
@@ -42,16 +57,24 @@ export const projects: Project[] = [
   },
   {
     slug: "learn-just-enough",
+    imageWidth: 647,
+    imageHeight: 1400,
+    type: "apps",
+    visual: "phone",
     name: "Learn Just Enough",
     category: "Language learning",
     description:
       "Practical language lessons for the conversations you actually need.",
-    url: "https://learnjustenough.com",
+    url: "/projects/learn-just-enough/",
+    overview: "Audio-first language practice built around real situations: ordering breakfast, finding your way, and getting through everyday conversations. Learn with short lessons, listen to natural dialogue, and practise the phrases you need. The app is in development; a public download is not available yet.",
     color: "#ebdfca",
-    format: "Website & app",
+    format: "iOS · In development",
   },
   {
     slug: "interesting-languages",
+    imageWidth: 1200,
+    imageHeight: 833,
+    type: "sites",
     name: "Interesting Languages",
     category: "Language reference",
     description: "A curious person’s guide to the world’s languages.",
@@ -61,6 +84,10 @@ export const projects: Project[] = [
   },
   {
     slug: "absolute-timer",
+    imageWidth: 461,
+    imageHeight: 1000,
+    type: "apps",
+    visual: "phone",
     name: "Absolute Timer",
     category: "Fitness",
     description:
@@ -71,6 +98,9 @@ export const projects: Project[] = [
   },
   {
     slug: "papertiger",
+    imageWidth: 1400,
+    imageHeight: 884,
+    type: "apps",
     name: "PaperTiger",
     category: "Prediction markets",
     description: "Explore prediction markets and test ideas with paper trades.",
@@ -80,6 +110,9 @@ export const projects: Project[] = [
   },
   {
     slug: "banana-stand",
+    imageWidth: 1024,
+    imageHeight: 836,
+    type: "apps",
     name: "Banana Stand",
     category: "Trading research",
     description:
@@ -90,6 +123,9 @@ export const projects: Project[] = [
   },
   {
     slug: "finepredict",
+    imageWidth: 1200,
+    imageHeight: 833,
+    type: "apps",
     name: "FinePredict",
     category: "Prediction markets",
     description:
@@ -100,6 +136,9 @@ export const projects: Project[] = [
   },
   {
     slug: "disco-mail",
+    imageWidth: 1400,
+    imageHeight: 825,
+    type: "apps",
     name: "Disco Mail",
     category: "Tools for builders",
     description:
@@ -110,6 +149,10 @@ export const projects: Project[] = [
   },
   {
     slug: "fluent-cafe",
+    visual: "panel",
+    imageWidth: 850,
+    imageHeight: 1290,
+    type: "apps",
     name: "Fluent Café",
     category: "Language learning",
     description:
@@ -120,6 +163,9 @@ export const projects: Project[] = [
   },
   {
     slug: "swahili-grammar",
+    imageWidth: 1200,
+    imageHeight: 833,
+    type: "sites",
     name: "Swahili Grammar",
     category: "Language reference",
     description:
@@ -130,6 +176,9 @@ export const projects: Project[] = [
   },
   {
     slug: "disco-store",
+    imageWidth: 1200,
+    imageHeight: 833,
+    type: "sites",
     name: "Disco Media Store",
     category: "Music & equipment",
     description:
@@ -137,5 +186,118 @@ export const projects: Project[] = [
     url: "https://discomedia.com.au",
     color: "#dfd9d1",
     format: "Online store",
+  },
+  {
+    slug: "grandmaster-flash",
+    imageWidth: 646,
+    imageHeight: 1400,
+    name: "Grandmaster Flash",
+    category: "Language learning",
+    description: "Flashcards that fit your life. Spaced repetition, audio, and a library you can build with AI.",
+    url: "https://grandmasterflash.discomedia.co",
+    color: "#e9d7cb",
+    format: "iOS · In development",
+    type: "apps",
+    visual: "phone",
+  },
+  {
+    slug: "mailer-choice",
+    imageWidth: 1200,
+    imageHeight: 833,
+    name: "Mailer Choice",
+    category: "Email & publishing",
+    description: "Compare email platforms by subscribers, sending volume, features, and the way your audience grows.",
+    url: "https://mailerchoice.com",
+    color: "#dae4e5",
+    format: "Web app",
+    type: "apps",
+  },
+  {
+    slug: "skyfighter",
+    imageWidth: 644,
+    imageHeight: 1400,
+    name: "Skyfighter",
+    category: "Games",
+    description: "A pocket-sized arcade dogfight in one-bit style. Dodge, shoot, and take on the bosses.",
+    url: "/projects/skyfighter/",
+    color: "#dcd9c6",
+    format: "iOS · In development",
+    type: "apps",
+    visual: "phone",
+    overview: "A vertical arcade shooter with a one-bit look inspired by classic Macintosh games. Fly through dogfights, dodge enemy fire, challenge bosses, and unlock new aircraft. Skyfighter is in development for iPhone; a public download is not available yet.",
+  },
+  {
+    slug: "disco-hq",
+    imageWidth: 1285,
+    imageHeight: 1260,
+    name: "Disco HQ",
+    category: "Behind the scenes",
+    description: "Our internal command centre for running blogs: publishing, analytics, and workflows in one place.",
+    url: "https://hooshmand.net/how-i-use-discohq-run-blogs-business/",
+    color: "#ead7c9",
+    format: "Internal tool",
+    type: "other",
+  },
+  {
+    slug: "roy",
+    imageWidth: 644,
+    imageHeight: 1400,
+    name: "Roy",
+    category: "Games",
+    description: "A little life in a living neighbourhood. Explore, meet people, and see where the day takes you.",
+    url: "/projects/roy/",
+    color: "#d8e2de",
+    format: "iOS · In development",
+    type: "apps",
+    visual: "phone",
+    overview: "An offline life simulation for iPhone, set in a neighbourhood that grows as you explore. Meet the residents, find work, furnish your home, and settle into a world with its own weather and daily rhythms. Roy is in private testing; a public download is not available yet.",
+  },
+  {
+    slug: "cover-artist",
+    imageWidth: 1418,
+    imageHeight: 1230,
+    name: "Cover Artist",
+    category: "Tools for publishers",
+    description: "Create cover art and inline images right inside WordPress, with the AI services you choose.",
+    url: "https://wordpress.org/plugins/cover-artist/",
+    color: "#dfe0ec",
+    format: "WordPress plugin",
+    type: "other",
+  },
+  {
+    slug: "salsa-machine",
+    imageWidth: 644,
+    imageHeight: 1400,
+    name: "Salsa Machine",
+    category: "Music & dance",
+    description: "Build your groove. Salsa rhythms, clave, tempo, and a whole band of instruments in your pocket.",
+    url: "https://salsamachine.discomedia.co",
+    color: "#f0ddce",
+    format: "iOS · In development",
+    type: "apps",
+    visual: "phone",
+  },
+  {
+    slug: "disco-tts",
+    imageWidth: 1024,
+    imageHeight: 993,
+    name: "Disco TTS",
+    category: "Tools for publishers",
+    description: "Give your words a voice. Add natural text-to-speech audio to WordPress posts and language lessons.",
+    url: "https://hooshmand.net/wordpress-plugin-chatgpt/",
+    color: "#d9e3db",
+    format: "WordPress plugin",
+    type: "other",
+  },
+  {
+    slug: "discomedia-utils",
+    name: "Disco Media Utils",
+    category: "Tools for builders",
+    description: "Our shared TypeScript toolkit for AI, email, market data, and the useful bits between.",
+    url: "https://www.npmjs.com/package/@discomedia/utils",
+    color: "#d8dfd2",
+    format: "npm package",
+    type: "other",
+    visual: "code",
   },
 ];
