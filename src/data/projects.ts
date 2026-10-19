@@ -16,6 +16,19 @@ export type Project = {
 };
 export const projects: Project[] = [
   {
+    slug: "melbourne-social-club",
+    imageWidth: 1200,
+    imageHeight: 833,
+    type: "sites",
+    name: "Melbourne Social Club",
+    category: "Dance & community",
+    description:
+      "Bringing Melbourne together through salsa, bachata, and community-run dance socials.",
+    url: "https://melbournesocialclub.org",
+    color: "#f0dfca",
+    format: "Website",
+  },
+  {
     slug: "discover-discomfort",
     imageWidth: 1200,
     imageHeight: 833,
