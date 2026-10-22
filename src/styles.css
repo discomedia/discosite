@@ -548,6 +548,24 @@ h2 {
   height: auto;
   border-radius: 18px;
 }
+.artwork-screen {
+  padding: 0;
+}
+.artwork-screen .browser-frame {
+  border-radius: 0;
+  box-shadow: none;
+  transform: none;
+}
+.artwork-screen .browser-toolbar {
+  display: none;
+}
+.artwork-screen img {
+  height: 100%;
+  object-fit: contain;
+}
+.project-card:hover .artwork-screen .browser-frame {
+  transform: none;
+}
 .contact-banner {
   background: var(--dark);
   color: var(--paper);

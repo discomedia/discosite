@@ -31,13 +31,14 @@ test("all public routes render complete content without a CMS or framework runti
   assert.equal(fs.existsSync("dist/_worker.js"), false);
   assert.equal(fs.existsSync("functions"), false);
 });
-test("portfolio contains 23 distinct project links and real local screenshots", () => {
+test("portfolio contains 24 distinct project links and real local screenshots", () => {
   const html = read("portfolio/index.html");
   const links = [
     ...html.matchAll(/class="project-card"[^>]*href="([^"]+)"/g),
   ].map((match) => match[1]);
-  assert.equal(links.length, 23);
-  assert.equal(new Set(links).size, 23);
+  assert.equal(links.length, 24);
+  assert.equal(new Set(links).size, 24);
+  assert.ok(links.includes("https://salsamatic.discomedia.co"));
   assert.ok(links.includes("https://bananastandapp.com"));
   assert.ok(
     links.includes("https://apps.apple.com/app/absolute-timer/id6755406554"),
@@ -45,7 +46,7 @@ test("portfolio contains 23 distinct project links and real local screenshots", 
   const images = [...html.matchAll(/src="(\/images\/projects\/[^\"]+)"/g)].map(
     (match) => match[1],
   );
-  assert.equal(images.length, 22);
+  assert.equal(images.length, 23);
   for (const image of images)
     assert.ok(fs.statSync(path.join("dist", image)).size > 1000, image);
 });
@@ -90,8 +91,8 @@ test("portfolio exposes all four accessible filters and every requested project"
   assert.match(html, /<legend class="sr-only">Filter projects<\/legend>/);
   assert.match(html, /aria-live="polite"/);
   const counts = Object.fromEntries(["apps", "sites", "other"].map(type => [type, [...html.matchAll(new RegExp(`data-project-type="${type}"`, "g"))].length]));
-  assert.deepEqual(counts, { apps: 13, sites: 6, other: 4 });
-  for (const name of ["Melbourne Social Club", "Grandmaster Flash", "Mailer Choice", "Skyfighter", "Disco HQ", "Roy", "Cover Artist", "Salsa Machine", "Disco TTS", "Disco Media Utils"])
+  assert.deepEqual(counts, { apps: 14, sites: 6, other: 4 });
+  for (const name of ["Melbourne Social Club", "Grandmaster Flash", "Mailer Choice", "Skyfighter", "Disco HQ", "Roy", "Cover Artist", "Salsamatic", "Salsa Machine", "Disco TTS", "Disco Media Utils"])
     assert.ok(html.includes(`<h3>${name}</h3>`), name);
   assert.match(html, /npm install/);
   assert.match(html, /href="\/projects\/learn-just-enough\/"/);

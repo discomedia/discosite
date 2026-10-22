@@ -9,7 +9,8 @@ export type Project = {
   color: string;
   format: string;
   type: "apps" | "sites" | "other";
-  visual?: "phone" | "panel" | "code";
+  visual?: "phone" | "panel" | "code" | "artwork";
+  imageAlt?: string;
   overview?: string;
   imageWidth?: number;
   imageHeight?: number;
@@ -276,6 +277,21 @@ export const projects: Project[] = [
     color: "#dfe0ec",
     format: "WordPress plugin",
     type: "other",
+  },
+  {
+    slug: "salsamatic",
+    imageWidth: 1440,
+    imageHeight: 960,
+    type: "apps",
+    visual: "artwork",
+    imageAlt: "Salsamatic on Apple Watch and iPhone, showing a dance session and liked songs",
+    name: "Salsamatic",
+    category: "Music & dance",
+    description:
+      "Track your dancing on Apple Watch. See dance time, songs, and spins, and find your favourite songs afterwards on iPhone.",
+    url: "https://salsamatic.discomedia.co",
+    color: "#141318",
+    format: "iOS & watchOS",
   },
   {
     slug: "salsa-machine",

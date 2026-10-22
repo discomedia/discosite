@@ -17,7 +17,7 @@ const { projects } = Astro.props;
       <div
         class:list={[
           "project-screen",
-          { "phone-screen": project.visual === "phone", "panel-screen": project.visual === "panel", "code-screen": project.visual === "code" },
+          { "phone-screen": project.visual === "phone", "panel-screen": project.visual === "panel", "code-screen": project.visual === "code", "artwork-screen": project.visual === "artwork" },
         ]}
         style={`--card-color: ${project.color}`}
       >
@@ -37,7 +37,7 @@ const { projects } = Astro.props;
             </div>
           ) : (<img
             src={`/images/projects/${project.slug}.webp`}
-            alt={`Screenshot of ${project.name}`}
+            alt={project.imageAlt ?? `Screenshot of ${project.name}`}
             width={project.imageWidth ?? 1200}
             height={project.imageHeight ?? 833}
             loading="lazy"
