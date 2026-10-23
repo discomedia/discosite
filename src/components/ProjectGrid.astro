@@ -5,7 +5,7 @@ const { projects } = Astro.props;
 ---
 
 <div class="project-grid">
-  {projects.map((project, index) => (
+  {projects.map((project) => (
     <a
       class="project-card"
       data-project-type={project.type}
@@ -19,17 +19,11 @@ const { projects } = Astro.props;
           "project-screen",
           { "phone-screen": project.visual === "phone", "panel-screen": project.visual === "panel", "code-screen": project.visual === "code", "artwork-screen": project.visual === "artwork" },
         ]}
-        style={`--card-color: ${project.color}`}
       >
         <div class="browser-frame">
-          <div class="browser-toolbar" aria-hidden="true">
-            <span class="browser-dots">● ● ●</span>
-            <span>{project.visual === "code" ? "@discomedia/utils" : new URL(project.url, Astro.site).hostname}</span>
-            <span>↗</span>
-          </div>
           {project.visual === "code" ? (
             <div class="code-preview" aria-label="Install Disco Media Utils from npm">
-              <span class="code-comment">// Small utilities. Big possibilities.</span>
+              <span class="code-comment">// Install from npm</span>
               <code><span class="code-prompt">$</span> npm install<br /><strong>@discomedia/utils</strong></code>
               <div class="code-rule"></div>
               <code><span class="code-keyword">import</span> {"{ disco }"}<br /><span class="code-keyword">from</span> <span class="code-string">'@discomedia/utils'</span>;</code>
@@ -44,17 +38,13 @@ const { projects } = Astro.props;
             decoding="async"
           />)}
         </div>
-        <span class="project-format">{project.format}</span>
       </div>
       <div class="project-meta">
         <span class="eyebrow">{project.category}</span>
-        <span class="project-number">{String(index + 1).padStart(2, "0")}</span>
+        <span class="project-format">{project.format}</span>
       </div>
       <div class="project-title">
         <h3>{project.name}</h3>
-        <span class="project-arrow" aria-hidden="true">
-          ↗
-        </span>
       </div>
       <p>{project.description}</p>
     </a>

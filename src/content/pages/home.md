@@ -2,32 +2,14 @@
 slug: "/"
 title: "Home"
 navLabel: "Home"
-seoTitle: "Disco Media | Global media products for everyday decisions"
-description: "Disco Media is a Melbourne-based global media company serving over 500,000 monthly users across travel, language learning, automotive, luxury real estate, and home improvement."
+seoTitle: "Disco Media | Publishing and Apps for Everyday Life"
+description: "Disco Media is an independent media and software company in Melbourne / Naarm, Australia. Browse our publications, language apps, travel tools and other projects."
 order: 1
 published: true
 ---
 
-# Global media products for everyday decisions
+# Publishing and Apps for Everyday Life
 
-Disco Media creates and operates blogs, reference sites, and apps that help people make confident decisions across the moments that matter.
+We publish apps, create websites, and build software for the world around us and everything we love.
 
-- Serving over 500,000 monthly users
-- Primary audiences in the US, Europe, the UK, and Australia
-- Blogs, reference sites, and apps across travel, language learning, automotive, luxury real estate, and home improvement
-- Based in Melbourne, Australia
-- ACN 647498691
-
-## Where we create impact
-
-| Sector             | What we build                                                                  |
-| ------------------ | ------------------------------------------------------------------------------ |
-| Travel             | Destination guides, itineraries, and practical resources for modern explorers. |
-| Language Learning  | Apps, lessons, and reference tools that help learners speak with confidence.   |
-| Automotive         | Advice, reviews, and resources for car owners and enthusiasts.                 |
-| Luxury Real Estate | Market insight and listings for discerning buyers and investors.               |
-| Home Improvement   | Guides and ideas to help people build, improve, and maintain their homes.      |
-
-## Let's connect
-
-Have a question, partnership idea, or need support? We'd love to hear from you.
+Browse our [portfolio](/portfolio/) for publications, apps and tools, including projects in development.

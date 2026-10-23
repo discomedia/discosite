@@ -7,11 +7,13 @@ const canonical = new URL(path, Astro.site).toString();
 const navigation = [
   { href: "/", label: "Home" },
   { href: "/portfolio/", label: "Portfolio" },
+  { href: "/contact/", label: "Contact" },
 ];
+const isCurrent = (href: string) => path === href || (href === "/portfolio/" && path.startsWith("/projects/"));
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en-AU">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,8 +30,12 @@ const navigation = [
       property="og:image"
       content="https://discomedia.co/images/social-card.png"
     />
+    <meta property="og:image:width" content="1481" />
+    <meta property="og:image:height" content="778" />
+    <meta property="og:image:alt" content="Disco Media: Publishing and Apps for Everyday Life, based in Melbourne / Naarm, Australia." />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#f4f3eb" />
+    <meta name="theme-color" content="#fafaf7" />
+    {import.meta.env.PROD && <>
     <script
       is:inline
       async
@@ -43,6 +49,7 @@ const navigation = [
       gtag("js", new Date());
       gtag("config", "G-PKNRGD305Q");
     </script>
+    </>}
   </head>
   <body>
     <a class="skip-link" href="#main">
@@ -57,29 +64,26 @@ const navigation = [
           {navigation.map((item) => (
             <a
               href={item.href}
-              aria-current={path === item.href ? "page" : undefined}
+              aria-current={isCurrent(item.href) ? (path === item.href ? "page" : "location") : undefined}
             >
               {item.label}
             </a>
           ))}
-          <a class="nav-contact" href="/contact/">
-            Say hello <span aria-hidden="true">↗</span>
-          </a>
         </nav>
         <details class="mobile-menu">
-          <summary aria-label="Open navigation">
-            Menu <span aria-hidden="true">＋</span>
+          <summary>
+            Menu
           </summary>
           <nav aria-label="Mobile navigation">
             {navigation.map((item) => (
               <a
                 href={item.href}
-                aria-current={path === item.href ? "page" : undefined}
+                aria-current={isCurrent(item.href) ? (path === item.href ? "page" : "location") : undefined}
               >
                 {item.label}
               </a>
             ))}
-            <a href="/contact/">Say hello ↗</a>
+            <a href="/support/">Support</a>
           </nav>
         </details>
       </div>
@@ -94,12 +98,11 @@ const navigation = [
             <BrandMark />
           </a>
           <p>
-            Made with curiosity.
-            <br />
-            Based in Melbourne. Built for the world.
+            Independent media & software.
+            <br />Melbourne / Naarm, Australia.
           </p>
-          <a class="text-link" href="/contact/">
-            Let’s talk <span aria-hidden="true">↗</span>
+          <a class="text-link" href="mailto:info@discomedia.co">
+            info@discomedia.co
           </a>
         </div>
         <div class="footer-bottom">
@@ -114,5 +117,17 @@ const navigation = [
         </div>
       </div>
     </footer>
+    <script>
+      const menu = document.querySelector<HTMLDetailsElement>(".mobile-menu");
+      menu?.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+          menu.open = false;
+          menu.querySelector("summary")?.focus();
+        }
+      });
+      document.addEventListener("click", event => {
+        if (menu?.open && event.target instanceof Node && !menu.contains(event.target)) menu.open = false;
+      });
+    </script>
   </body>
 </html>

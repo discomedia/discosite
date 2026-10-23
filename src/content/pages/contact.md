@@ -10,4 +10,4 @@ published: true
 
 # Contact Disco Media
 
-We'd love to hear from you. Whether you have a question, partnership interest, or general enquiry, send us a message and our team will get back to you as soon as possible.
+For partnership proposals and questions about our publications or apps, email [info@discomedia.co](mailto:info@discomedia.co) with the project name and what you’d like to discuss.

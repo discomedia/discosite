@@ -1,110 +1,63 @@
 ---
 import SiteLayout from "../components/SiteLayout.astro";
 import ProjectGrid from "../components/ProjectGrid.astro";
-import ContactBanner from "../components/ContactBanner.astro";
 import { projects } from "../data/projects";
+const selectedSlugs = ["discover-discomfort", "grandmaster-flash", "motofomo", "detour"];
+const selectedProjects = selectedSlugs.map(slug => projects.find(project => project.slug === slug)!);
 ---
 
 <SiteLayout
-  title="Disco Media | Good ideas, out in the world"
-  description="Independent media, apps, and useful tools. Built in Melbourne for curious people around the world."
+  title="Disco Media | Publishing and Apps for Everyday Life"
+  description="Disco Media is an independent media and software company in Melbourne / Naarm, Australia. Browse our publications, language apps, travel tools and other projects."
   path="/"
 >
   <main id="main">
     <section class="hero shell">
       <div class="hero-copy">
-        <p class="eyebrow">
-          <span class="status-dot"></span> Independent minds. Global reach.
-        </p>
-        <h1>
-          Good ideas.
-          <br />
-          Out in the
-          <br />
-          <span class="world-word">
-            world<span class="accent-dot">.</span>
-          </span>
-        </h1>
+        <p class="eyebrow">Disco Media · Melbourne / Naarm, Australia</p>
+        <h1>Publishing and Apps <br /><span>for Everyday Life</span></h1>
         <p class="hero-intro">
-          We make websites, apps, and useful little things for curious people.
-          Built in Melbourne. At home everywhere.
+          We publish apps, create websites, and build software for the world around us and everything we love.
         </p>
         <div class="hero-actions">
           <a class="button" href="/portfolio/">
-            Explore our projects <span aria-hidden="true">↗</span>
+            View all {projects.length} projects
           </a>
-          <a class="text-link" href="#about">
-            Meet Disco Media <span aria-hidden="true">↓</span>
+          <a class="text-link" href="#selected-work">
+            Selected projects
           </a>
         </div>
       </div>
-      <div class="hero-art">
-        <div class="art-grid" aria-hidden="true"></div>
-        <span class="art-coordinate">37.8136° S / 144.9631° E</span>
+      <div class="hero-art" aria-hidden="true">
         <img
           class="hero-globe"
           src="/images/disco-globe.svg"
-          alt="An aeroplane orbiting Earth, made of mirrored disco-ball tiles"
+          alt=""
           width="660"
           height="630"
           fetchpriority="high"
         />
-        <div class="art-caption">
-          <span class="status-dot"></span> A world of curiosity, in orbit.
-        </div>
-        <span class="art-note" aria-hidden="true">
-          A little disco.
-          <br />A lot of discovery.
-        </span>
       </div>
     </section>
-    <div class="topic-strip">
-      <div class="shell">
-        <span>Travel & culture</span>
-        <span aria-hidden="true">✳</span>
-        <span>Languages</span>
-        <span aria-hidden="true">✳</span>
-        <span>Apps & tools</span>
-        <span aria-hidden="true">✳</span>
-        <span>Ideas that go places</span>
-      </div>
-    </div>
-    <section id="about" class="about-section shell">
-      <p class="eyebrow">A small team. A wide world.</p>
-      <div class="about-grid">
-        <h2>
-          Curiosity is our
-          <br />
-          common thread<span class="accent-dot">.</span>
-        </h2>
-        <div>
-          <p>
-            From finding the right motorcycle to finding the right words in a
-            new language, we build things that make life a little more
-            interesting.
-          </p>
-          <p>
-            Disco Media is an independent media and product company. Our work
-            spans publishing, travel, language learning, and tools for people
-            who like to explore.
-          </p>
-        </div>
-      </div>
-    </section>
-    <section class="work-section shell">
+    <section id="selected-work" class="work-section shell" aria-labelledby="selected-heading">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">A few things we’ve put into the world</p>
-          <h2>
-            Our orbit<span class="accent-dot">.</span>
-          </h2>
+          <p class="eyebrow">Publications & apps</p>
+          <h2 id="selected-heading">Selected projects</h2>
         </div>
         <a class="text-link" href="/portfolio/">
-          All {projects.length} projects <span aria-hidden="true">↗</span>
+          Full portfolio
         </a>
       </div>
-      <ProjectGrid projects={projects.slice(0, 4)} />
+      <ProjectGrid projects={selectedProjects} />
     </section>
-    <ContactBanner />
+    <section id="about" class="about-section shell" aria-labelledby="about-heading">
+      <div><p class="eyebrow">About Disco Media</p><h2 id="about-heading">We publish, build<br />and run our products.</h2></div>
+      <div class="about-copy">
+        <p>Disco Media is an independent media and software company based in Melbourne / Naarm, Australia. Our publications cover travel, languages and motorcycles, with guides and reference material for readers around the world.</p>
+        <p>Our portfolio also includes games, trading research apps and tools for publishers. The tools we build for our own work include email delivery, WordPress plugins and publishing software.</p>
+        <a class="text-link" href="/contact/">Contact us about a partnership</a>
+      </div>
+    </section>
   </main>
 </SiteLayout>

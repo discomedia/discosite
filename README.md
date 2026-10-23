@@ -1,6 +1,6 @@
 # Disco Media
 
-A static Astro site for Disco Media, an independent media and product company based in Melbourne. Hosted on Cloudflare Pages. Content, navigation, screenshots, and branding are version-controlled; there is no CMS, admin login, database, KV binding, Pages Function, or runtime secret.
+A static Astro site for Disco Media, an independent media and product company based in Melbourne / Naarm, Australia. Hosted on Cloudflare Pages. Content, navigation, screenshots, and branding are version-controlled; there is no CMS, admin login, database, KV binding, Pages Function, or runtime secret.
 
 ## Develop and verify
 
@@ -25,11 +25,13 @@ npm test
 - Legal policies: `src/content/pages/privacy.md` and `terms.md`, rendered at build time.
 - Contact and support: static email links to `info@discomedia.co` and `support@discomedia.co`.
 
-The portfolio has 24 projects. The All / Apps / Sites / Other control uses native radio buttons with a sliding indicator and a small DOM filter; all cards remain in the static HTML and are visible without JavaScript. Web apps are Apps; plugins, the npm package, and the internal Disco HQ tool are Other.
+The portfolio has 24 projects. The All / Apps / Sites / Other control uses native radio buttons with a visible selected state and a small DOM filter; all cards remain in the static HTML and are visible without JavaScript. Web apps are Apps; plugins, the npm package, and the internal Disco HQ tool are Other.
 
 Most website screenshots were captured from public project sites on 8 October 2026; Mailer Choice was captured on 9 October. Melbourne Social Club uses a homepage capture from `https://melbournesocialclub.org` taken on 19 October 2026. Native app previews use actual repository screenshots: Absolute Timer (`absolutetimer/app-store/screenshots/en-US/02-active-round.png`), Detour (`travelmap/site/assets/screen-example-map.png`), Learn Just Enough (the archived Swift fidelity baseline `06-home.png`), Grandmaster Flash (`grandmaster/docs/app-store/screenshots/iphone-library.jpg`), Skyfighter (`skyfighter/AppStore/screenshots/iphone-6.9/01-dogfight.png`), Roy (`roy/docs/evidence/apartment.png`), and Salsa Machine (`salsamachine/site/public/screenshots/mixer.png`). Salsamatic uses the existing watch-and-iPhone promotional composition from `salsawatch/app-store/creative/salsamatic-search.png`, resized to 1440 × 960 and encoded as WebP; its app screens are genuine repository captures. These are representative captures, not a promise of the latest build. Cover Artist uses its WordPress editor screenshot from `cover-artist/releases/cover-artist-screenshot.png`. Disco HQ and Disco TTS reuse images already published on Hooshmand.net: [the connected-blogs dashboard](https://hooshmand.net/wp-content/uploads/2026/10/discohq-connected-blogs-dashboard.jpg) and [the TTS settings example](https://hooshmand.net/wp-content/uploads/2024/06/my-Azure-TTS-plugin-to-play-audio-files-1024x993.png). The npm card shows real installation and import syntax. PaperTiger and Banana Stand use actual dashboard images from their published launch articles on Hooshmand.net (`Paper-Tiger-Orders-scaled.jpg` and `banana-stand-day-1-1024x836.png`). Disco Mail uses its delivery-log capture from the repository's published changelog. Fluent Café uses its interactive language-onboarding panel; authenticated member screens are not publicly available. The portfolio links use the current public origins, including `bananastandapp.com`, `papertigerapp.com`, the existing FinePredict Netlify origin, and Absolute Timer's App Store listing. Screenshots are served locally, not fetched on demand.
 
-Inter is self-hosted under `public/fonts` with its SIL Open Font License. The graphic is an SVG with projected mirror facets and continent shapes; motion respects `prefers-reduced-motion`.
+Inter is self-hosted under `public/fonts` with its SIL Open Font License. The globe SVG is the brand illustration; it is static. The layout uses off-white surfaces, dark green text and six reusable type roles, with colour and spacing tokens in `src/styles.css`. Project previews use the actual screenshots without added browser toolbars or per-project colour panels. The homepage selects two publications and two apps; the portfolio retains all projects. The mobile menu uses a native disclosure and supports Escape and outside-click dismissal. Analytics run in production builds only; the development toolbar is disabled for local review.
+
+The 23 October 2026 review follows Dana Master Style Guide v1.3. See `docs/style-review.md` for the findings and local validation. Dana approved the local preview and requested deployment on 23 October 2026. Pushing `master` triggers the validated production deployment.
 
 ## Deployment
 

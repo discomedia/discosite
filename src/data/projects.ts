@@ -6,7 +6,6 @@ export type Project = {
   category: string;
   description: string;
   url: string;
-  color: string;
   format: string;
   type: "apps" | "sites" | "other";
   visual?: "phone" | "panel" | "code" | "artwork";
@@ -24,9 +23,8 @@ export const projects: Project[] = [
     name: "Melbourne Social Club",
     category: "Dance & community",
     description:
-      "Bringing Melbourne together through salsa, bachata, and community-run dance socials.",
+      "Salsa and bachata events in Melbourne / Naarm, Australia, with bookings for community-run dance socials.",
     url: "https://melbournesocialclub.org",
-    color: "#f0dfca",
     format: "Website",
   },
   {
@@ -37,9 +35,8 @@ export const projects: Project[] = [
     name: "Discover Discomfort",
     category: "Travel & culture",
     description:
-      "Language, travel, and the joy of getting outside your comfort zone.",
+      "Travel and language-learning guides, with advice on living abroad and learning about local cultures.",
     url: "https://discoverdiscomfort.com",
-    color: "#e9d5b9",
     format: "Website",
   },
   {
@@ -51,9 +48,8 @@ export const projects: Project[] = [
     name: "Detour",
     category: "Travel & maps",
     description:
-      "Make a map in a conversation. Take it with you on your iPhone.",
+      "Create travel maps in a conversation and view your saved places on iPhone.",
     url: "https://detour.discomedia.co",
-    color: "#dfe5d8",
     format: "Web & iOS",
   },
   {
@@ -64,9 +60,8 @@ export const projects: Project[] = [
     name: "Motofomo",
     category: "Motorcycles",
     description:
-      "Motorcycle reviews, buying guides, and stories for the ride ahead.",
+      "Motorcycle reviews and buying guides covering specifications, ownership and riding.",
     url: "https://motofomo.com",
-    color: "#e8e6df",
     format: "Website",
   },
   {
@@ -78,10 +73,10 @@ export const projects: Project[] = [
     name: "Learn Just Enough",
     category: "Language learning",
     description:
-      "Practical language lessons for the conversations you actually need.",
+      "Audio lessons for everyday conversations, including ordering food and asking for directions.",
     url: "/projects/learn-just-enough/",
-    overview: "Audio-first language practice built around real situations: ordering breakfast, finding your way, and getting through everyday conversations. Learn with short lessons, listen to natural dialogue, and practise the phrases you need. The app is in development; a public download is not available yet.",
-    color: "#ebdfca",
+    overview:
+      "Short lessons pair dialogues with phrases you can listen to and practise. The app is in development for iPhone; a public download is not available yet.",
     format: "iOS · In development",
   },
   {
@@ -91,9 +86,9 @@ export const projects: Project[] = [
     type: "sites",
     name: "Interesting Languages",
     category: "Language reference",
-    description: "A curious person’s guide to the world’s languages.",
+    description:
+      "Guides to the world’s languages, with explanations of grammar, writing systems and pronunciation.",
     url: "https://interestinglanguages.com",
-    color: "#dbe4e4",
     format: "Website",
   },
   {
@@ -105,9 +100,8 @@ export const projects: Project[] = [
     name: "Absolute Timer",
     category: "Fitness",
     description:
-      "A focused boxing and interval timer for iPhone and Apple Watch.",
+      "Time boxing rounds, rest periods and interval workouts on iPhone and Apple Watch.",
     url: "https://apps.apple.com/app/absolute-timer/id6755406554",
-    color: "#d6e8dc",
     format: "iOS & watchOS",
   },
   {
@@ -117,9 +111,8 @@ export const projects: Project[] = [
     type: "apps",
     name: "PaperTiger",
     category: "Prediction markets",
-    description: "Explore prediction markets and test ideas with paper trades.",
+    description: "Test prediction-market strategies with paper trades.",
     url: "https://papertigerapp.com",
-    color: "#ddd9e9",
     format: "Web app",
   },
   {
@@ -130,9 +123,8 @@ export const projects: Project[] = [
     name: "Banana Stand",
     category: "Trading research",
     description:
-      "Quantitative research, algorithmic trading, and portfolio management.",
+      "Research trading strategies and manage portfolios in a web dashboard.",
     url: "https://bananastandapp.com",
-    color: "#eee4bf",
     format: "Web app",
   },
   {
@@ -143,9 +135,8 @@ export const projects: Project[] = [
     name: "FinePredict",
     category: "Prediction markets",
     description:
-      "Compare prediction market contracts and understand the rules behind the trade.",
+      "Compare prediction-market contracts and read the rules that determine their outcomes.",
     url: "https://finepredict.netlify.app",
-    color: "#dae3df",
     format: "Web app",
   },
   {
@@ -155,10 +146,8 @@ export const projects: Project[] = [
     type: "apps",
     name: "Disco Mail",
     category: "Tools for builders",
-    description:
-      "Email infrastructure for the products we build, and the people who build with us.",
+    description: "Send email from your apps and review delivery logs.",
     url: "https://mail.discomedia.co",
-    color: "#d9e3e1",
     format: "Web app",
   },
   {
@@ -169,10 +158,8 @@ export const projects: Project[] = [
     type: "apps",
     name: "Fluent Café",
     category: "Language learning",
-    description:
-      "Language practice for the words, phrases, and conversations that stick.",
+    description: "Practise vocabulary, phrases and conversations in a web app.",
     url: "https://fluentcafe.com",
-    color: "#e4ddcf",
     format: "Web app",
   },
   {
@@ -182,10 +169,8 @@ export const projects: Project[] = [
     type: "sites",
     name: "Swahili Grammar",
     category: "Language reference",
-    description:
-      "An accessible guide to Swahili grammar, with practical explanations and examples.",
+    description: "Swahili grammar explained with examples for learners.",
     url: "https://swahiligrammar.com",
-    color: "#dce0d0",
     format: "Website",
   },
   {
@@ -196,9 +181,8 @@ export const projects: Project[] = [
     name: "Disco Media Store",
     category: "Music & equipment",
     description:
-      "Guitars, amps, pedals, and music equipment for Australian musicians.",
+      "Shop for guitars, amps, pedals and other music equipment in Australia.",
     url: "https://discomedia.com.au",
-    color: "#dfd9d1",
     format: "Online store",
   },
   {
@@ -207,9 +191,9 @@ export const projects: Project[] = [
     imageHeight: 1400,
     name: "Grandmaster Flash",
     category: "Language learning",
-    description: "Flashcards that fit your life. Spaced repetition, audio, and a library you can build with AI.",
+    description:
+      "Build flashcard decks with AI and review them with audio and spaced repetition.",
     url: "https://grandmasterflash.discomedia.co",
-    color: "#e9d7cb",
     format: "iOS · In development",
     type: "apps",
     visual: "phone",
@@ -220,9 +204,9 @@ export const projects: Project[] = [
     imageHeight: 833,
     name: "Mailer Choice",
     category: "Email & publishing",
-    description: "Compare email platforms by subscribers, sending volume, features, and the way your audience grows.",
+    description:
+      "Compare email platforms by subscriber count, sending volume and supported functions.",
     url: "https://mailerchoice.com",
-    color: "#dae4e5",
     format: "Web app",
     type: "apps",
   },
@@ -232,13 +216,14 @@ export const projects: Project[] = [
     imageHeight: 1400,
     name: "Skyfighter",
     category: "Games",
-    description: "A pocket-sized arcade dogfight in one-bit style. Dodge, shoot, and take on the bosses.",
+    description:
+      "An arcade flying game for iPhone, with one-bit graphics, enemy aircraft and boss fights.",
     url: "/projects/skyfighter/",
-    color: "#dcd9c6",
     format: "iOS · In development",
     type: "apps",
     visual: "phone",
-    overview: "A vertical arcade shooter with a one-bit look inspired by classic Macintosh games. Fly through dogfights, dodge enemy fire, challenge bosses, and unlock new aircraft. Skyfighter is in development for iPhone; a public download is not available yet.",
+    overview:
+      "The graphics are inspired by classic Macintosh games. Unlock new aircraft as you progress through dogfights and boss fights. Skyfighter is in development for iPhone; a public download is not available yet.",
   },
   {
     slug: "disco-hq",
@@ -246,9 +231,9 @@ export const projects: Project[] = [
     imageHeight: 1260,
     name: "Disco HQ",
     category: "Behind the scenes",
-    description: "Our internal command centre for running blogs: publishing, analytics, and workflows in one place.",
+    description:
+      "Our internal tool for publishing WordPress posts and reviewing blog analytics.",
     url: "https://hooshmand.net/how-i-use-discohq-run-blogs-business/",
-    color: "#ead7c9",
     format: "Internal tool",
     type: "other",
   },
@@ -258,13 +243,14 @@ export const projects: Project[] = [
     imageHeight: 1400,
     name: "Roy",
     category: "Games",
-    description: "A little life in a living neighbourhood. Explore, meet people, and see where the day takes you.",
+    description:
+      "A life simulation for iPhone. Explore a neighbourhood, meet residents and furnish your home.",
     url: "/projects/roy/",
-    color: "#d8e2de",
     format: "iOS · In development",
     type: "apps",
     visual: "phone",
-    overview: "An offline life simulation for iPhone, set in a neighbourhood that grows as you explore. Meet the residents, find work, furnish your home, and settle into a world with its own weather and daily rhythms. Roy is in private testing; a public download is not available yet.",
+    overview:
+      "Play offline, find work and follow the neighbourhood’s daily routines and changing weather. Roy is in private testing for iPhone; a public download is not available yet.",
   },
   {
     slug: "cover-artist",
@@ -272,9 +258,9 @@ export const projects: Project[] = [
     imageHeight: 1230,
     name: "Cover Artist",
     category: "Tools for publishers",
-    description: "Create cover art and inline images right inside WordPress, with the AI services you choose.",
+    description:
+      "Generate cover art and article images in WordPress using your chosen AI services.",
     url: "https://wordpress.org/plugins/cover-artist/",
-    color: "#dfe0ec",
     format: "WordPress plugin",
     type: "other",
   },
@@ -284,13 +270,13 @@ export const projects: Project[] = [
     imageHeight: 960,
     type: "apps",
     visual: "artwork",
-    imageAlt: "Salsamatic on Apple Watch and iPhone, showing a dance session and liked songs",
+    imageAlt:
+      "Salsamatic on Apple Watch and iPhone, showing a dance session and liked songs",
     name: "Salsamatic",
     category: "Music & dance",
     description:
-      "Track your dancing on Apple Watch. See dance time, songs, and spins, and find your favourite songs afterwards on iPhone.",
+      "Track dance time, songs and spins on Apple Watch, then find your favourite songs on iPhone.",
     url: "https://salsamatic.discomedia.co",
-    color: "#141318",
     format: "iOS & watchOS",
   },
   {
@@ -299,9 +285,9 @@ export const projects: Project[] = [
     imageHeight: 1400,
     name: "Salsa Machine",
     category: "Music & dance",
-    description: "Build your groove. Salsa rhythms, clave, tempo, and a whole band of instruments in your pocket.",
+    description:
+      "Practise salsa with adjustable rhythms, clave, tempo and instrument tracks on iPhone.",
     url: "https://salsamachine.discomedia.co",
-    color: "#f0ddce",
     format: "iOS · In development",
     type: "apps",
     visual: "phone",
@@ -312,9 +298,9 @@ export const projects: Project[] = [
     imageHeight: 993,
     name: "Disco TTS",
     category: "Tools for publishers",
-    description: "Give your words a voice. Add natural text-to-speech audio to WordPress posts and language lessons.",
+    description:
+      "Add text-to-speech audio to WordPress posts and language lessons.",
     url: "https://hooshmand.net/wordpress-plugin-chatgpt/",
-    color: "#d9e3db",
     format: "WordPress plugin",
     type: "other",
   },
@@ -322,9 +308,9 @@ export const projects: Project[] = [
     slug: "discomedia-utils",
     name: "Disco Media Utils",
     category: "Tools for builders",
-    description: "Our shared TypeScript toolkit for AI, email, market data, and the useful bits between.",
+    description:
+      "Our shared TypeScript package for working with AI services, email and market data.",
     url: "https://www.npmjs.com/package/@discomedia/utils",
-    color: "#d8dfd2",
     format: "npm package",
     type: "other",
     visual: "code",

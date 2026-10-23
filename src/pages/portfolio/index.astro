@@ -2,37 +2,34 @@
 import SiteLayout from "../../components/SiteLayout.astro";
 import ProjectGrid from "../../components/ProjectGrid.astro";
 import ProjectFilter from "../../components/ProjectFilter.astro";
-import ContactBanner from "../../components/ContactBanner.astro";
 import { projects } from "../../data/projects";
 ---
 
 <SiteLayout
   title="Portfolio | Disco Media"
-  description="Explore Disco Media’s websites, apps, and tools for travel, languages, motorcycles, research, and more."
+  description="Browse all 24 Disco Media projects, including publications, iPhone apps, web apps and publishing tools. Filter by apps, sites or other tools."
   path="/portfolio/"
 >
   <main id="main">
     <section class="shell portfolio-intro">
       <div>
-        <p class="eyebrow">The Disco Media portfolio</p>
-        <h1>
-          Our Portfolio<span class="accent-dot">.</span>
-        </h1>
+        <p class="eyebrow">Disco Media portfolio</p>
+        <h1>Our projects</h1>
       </div>
       <div>
         <p class="intro">
-          Here are our projects, spanning our interests but unified by a common
-          theme of bringing people together and making the world a smaller place.
+          Travel and language publications, iPhone and web apps, and the tools
+          we build for our own businesses.
         </p>
         <span class="portfolio-count">
-          {String(projects.length).padStart(2, "0")} projects / Keep exploring ↓
+          {projects.length} projects · Includes apps in development
         </span>
       </div>
     </section>
-    <section class="shell portfolio-work" aria-label="Projects">
+    <section class="shell portfolio-work" aria-labelledby="projects-heading">
+      <h2 class="sr-only" id="projects-heading">Projects</h2>
       <ProjectFilter projects={projects} />
       <div id="portfolio-projects"><ProjectGrid projects={projects} /></div>
     </section>
-    <ContactBanner />
   </main>
 </SiteLayout>
