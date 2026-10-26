@@ -38,7 +38,7 @@ test("portfolio contains 24 distinct project links and real local screenshots", 
   ].map((match) => match[1]);
   assert.equal(links.length, 24);
   assert.equal(new Set(links).size, 24);
-  assert.ok(links.includes("https://salsamatic.discomedia.co"));
+  assert.ok(links.includes("https://salsamatic.app"));
   assert.ok(links.includes("https://bananastandapp.com"));
   assert.ok(
     links.includes("https://apps.apple.com/app/absolute-timer/id6755406554"),
@@ -46,9 +46,18 @@ test("portfolio contains 24 distinct project links and real local screenshots", 
   const images = [...html.matchAll(/src="(\/images\/projects\/[^\"]+)"/g)].map(
     (match) => match[1],
   );
-  assert.equal(images.length, 23);
+  assert.equal(images.length, 39);
   for (const image of images)
     assert.ok(fs.statSync(path.join("dist", image)).size > 1000, image);
+  const galleries = [...html.matchAll(/<div class="app-screenshots">(.*?)<\/div>/gs)];
+  assert.equal(galleries.length, 8);
+  for (const [, gallery] of galleries) {
+    const screenshots = [...gallery.matchAll(/src="([^"]+)"/g)].map(match => match[1]);
+    assert.equal(screenshots.length, 3);
+    assert.equal(new Set(screenshots).size, 3);
+  }
+  for (const route of ["projects/learn-just-enough/index.html", "projects/skyfighter/index.html", "projects/roy/index.html"])
+    assert.equal([...read(route).matchAll(/src="\/images\/projects\//g)].length, 3);
 });
 test("every local link and asset resolves in the production build", () => {
   for (const route of routes) {

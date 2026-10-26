@@ -1,0 +1,18 @@
+---
+import type { Screenshot } from "../data/app-screenshots";
+type Props = { screenshots: [Screenshot, Screenshot, Screenshot] };
+const { screenshots } = Astro.props;
+---
+
+<div class="app-screenshots">
+  {screenshots.map(screenshot => (
+    <img
+      src={screenshot.src}
+      alt={screenshot.alt}
+      width={screenshot.width}
+      height={screenshot.height}
+      loading="lazy"
+      decoding="async"
+    />
+  ))}
+</div>

@@ -329,6 +329,25 @@ a:hover {
 .artwork-screen img {
   object-fit: contain;
 }
+.app-screenshots {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(6px, 1vw, 16px);
+  width: 100%;
+  height: 100%;
+  padding: clamp(10px, 1.5vw, 24px);
+}
+.app-screenshots img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
 .code-screen {
   background: #24352c;
 }
@@ -599,10 +618,18 @@ a:hover {
   display: flex;
   justify-content: center;
 }
-.project-detail-image img {
+.project-detail-image > img {
   width: 230px;
   max-width: 100%;
   border-radius: 12px;
+}
+.project-detail-image:has(.app-screenshots) {
+  padding: 0;
+  min-width: 0;
+}
+.project-detail-image .app-screenshots {
+  aspect-ratio: 1.5;
+  height: auto;
 }
 .article-shell {
   padding-block: var(--space-16) var(--space-24);

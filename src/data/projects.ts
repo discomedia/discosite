@@ -1,5 +1,6 @@
 // Project metadata and screenshot sources are maintained in README.md.
 // Add a project here and its screenshot in public/images/projects/.
+import { appScreenshots, type Screenshot } from "./app-screenshots";
 export type Project = {
   slug: string;
   name: string;
@@ -13,6 +14,7 @@ export type Project = {
   overview?: string;
   imageWidth?: number;
   imageHeight?: number;
+  screenshots?: [Screenshot, Screenshot, Screenshot];
 };
 export const projects: Project[] = [
   {
@@ -41,6 +43,7 @@ export const projects: Project[] = [
   },
   {
     slug: "detour",
+    screenshots: appScreenshots.detour,
     imageWidth: 646,
     imageHeight: 1400,
     type: "apps",
@@ -66,6 +69,7 @@ export const projects: Project[] = [
   },
   {
     slug: "learn-just-enough",
+    screenshots: appScreenshots["learn-just-enough"],
     imageWidth: 647,
     imageHeight: 1400,
     type: "apps",
@@ -93,6 +97,7 @@ export const projects: Project[] = [
   },
   {
     slug: "absolute-timer",
+    screenshots: appScreenshots["absolute-timer"],
     imageWidth: 461,
     imageHeight: 1000,
     type: "apps",
@@ -187,6 +192,7 @@ export const projects: Project[] = [
   },
   {
     slug: "grandmaster-flash",
+    screenshots: appScreenshots["grandmaster-flash"],
     imageWidth: 646,
     imageHeight: 1400,
     name: "Grandmaster Flash",
@@ -212,6 +218,7 @@ export const projects: Project[] = [
   },
   {
     slug: "skyfighter",
+    screenshots: appScreenshots.skyfighter,
     imageWidth: 644,
     imageHeight: 1400,
     name: "Skyfighter",
@@ -239,6 +246,7 @@ export const projects: Project[] = [
   },
   {
     slug: "roy",
+    screenshots: appScreenshots.roy,
     imageWidth: 644,
     imageHeight: 1400,
     name: "Roy",
@@ -266,21 +274,21 @@ export const projects: Project[] = [
   },
   {
     slug: "salsamatic",
+    screenshots: appScreenshots.salsamatic,
     imageWidth: 1440,
     imageHeight: 960,
     type: "apps",
-    visual: "artwork",
-    imageAlt:
-      "Salsamatic on Apple Watch and iPhone, showing a dance session and liked songs",
+    visual: "phone",
     name: "Salsamatic",
     category: "Music & dance",
     description:
       "Track dance time, songs and spins on Apple Watch, then find your favourite songs on iPhone.",
-    url: "https://salsamatic.discomedia.co",
+    url: "https://salsamatic.app",
     format: "iOS & watchOS",
   },
   {
     slug: "salsa-machine",
+    screenshots: appScreenshots["salsa-machine"],
     imageWidth: 644,
     imageHeight: 1400,
     name: "Salsa Machine",

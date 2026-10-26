@@ -1,6 +1,7 @@
 ---
 import SiteLayout from "../../components/SiteLayout.astro";
 import { projects } from "../../data/projects";
+import AppScreenshots from "../../components/AppScreenshots.astro";
 export function getStaticPaths() {
   return projects.filter(project => project.overview).map(project => ({ params: { slug: project.slug }, props: { project } }));
 }
@@ -18,7 +19,7 @@ const { project } = Astro.props;
       <a class="button" href={`mailto:info@discomedia.co?subject=${encodeURIComponent(project.name)}`}>Email us about {project.name}</a>
     </div>
     <div class="project-detail-image">
-      <img src={`/images/projects/${project.slug}.webp`} alt={`Screenshot of the ${project.name} iPhone app`} width={project.imageWidth} height={project.imageHeight} />
+      {project.screenshots ? <AppScreenshots screenshots={project.screenshots} /> : <img src={`/images/projects/${project.slug}.webp`} alt={`Screenshot of the ${project.name} iPhone app`} width={project.imageWidth} height={project.imageHeight} />}
     </div>
   </main>
 </SiteLayout>

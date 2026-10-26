@@ -1,5 +1,6 @@
 ---
 import type { Project } from "../data/projects";
+import AppScreenshots from "./AppScreenshots.astro";
 type Props = { projects: Project[] };
 const { projects } = Astro.props;
 ---
@@ -17,11 +18,11 @@ const { projects } = Astro.props;
       <div
         class:list={[
           "project-screen",
-          { "phone-screen": project.visual === "phone", "panel-screen": project.visual === "panel", "code-screen": project.visual === "code", "artwork-screen": project.visual === "artwork" },
+          { "screenshots-screen": !!project.screenshots, "phone-screen": !project.screenshots && project.visual === "phone", "panel-screen": project.visual === "panel", "code-screen": project.visual === "code", "artwork-screen": project.visual === "artwork" },
         ]}
       >
         <div class="browser-frame">
-          {project.visual === "code" ? (
+          {project.screenshots ? <AppScreenshots screenshots={project.screenshots} /> : project.visual === "code" ? (
             <div class="code-preview" aria-label="Install Disco Media Utils from npm">
               <span class="code-comment">// Install from npm</span>
               <code><span class="code-prompt">$</span> npm install<br /><strong>@discomedia/utils</strong></code>
