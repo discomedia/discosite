@@ -23,6 +23,7 @@ npm test
 - Design: `src/styles.css`
 - Brand: `public/images/disco-globe.svg`. The header, footer, and hero use this same artwork. Keep `public/favicon.svg` identical when updating the mark.
 - Legal policies: `src/content/pages/privacy.md` and `terms.md`, rendered at build time.
+- Skyfighter App Store support and privacy: `/skyfighter/` and `/skyfighter/privacy/`, with content in `src/content/pages/skyfighter*.md`. The app-specific privacy policy mirrors `skyfighter/AppStore/privacy-policy.md`.
 - Contact and support: static email links to `info@discomedia.co` and `support@discomedia.co`.
 
 The portfolio has 24 projects. The All / Apps / Sites / Other control uses native radio buttons with a visible selected state and a small DOM filter; all cards remain in the static HTML and are visible without JavaScript. Web apps are Apps; plugins, the npm package, and the internal Disco HQ tool are Other.

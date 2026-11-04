@@ -8,6 +8,8 @@ const routes = [
   "portfolio/index.html",
   "contact/index.html",
   "support/index.html",
+  "skyfighter/index.html",
+  "skyfighter/privacy/index.html",
   "privacy/index.html",
   "terms/index.html",
   "404.html",
