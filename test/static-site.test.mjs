@@ -110,3 +110,20 @@ test("portfolio exposes all four accessible filters and every requested project"
   for (const slug of ["learn-just-enough", "skyfighter", "roy"])
     assert.match(read(`projects/${slug}/index.html`), /a public download is not available yet/);
 });
+
+// The animated homepage must stay complete and accessible as static HTML.
+test("homepage bento keeps its heading, links and static fallbacks", () => {
+  const html = read("index.html");
+  assert.match(html, /<h1 id="home-heading">\s*Publishing and Apps for Everyday\s*<span class="rotator" aria-hidden="true">/);
+  assert.match(html, /<span class="sr-only">Life<\/span>/);
+  assert.match(html, /We publish apps, create websites, and build software for the world around us and everything we love\./);
+  assert.match(html, /href="\/portfolio\/"[^>]*>\s*View all 24 projects/);
+  assert.match(html, /aria-label="All 24 projects: 14 apps, 6 websites and 4 tools"/);
+  for (const url of ["https://grandmasterflash.discomedia.co", "https://discoverdiscomfort.com", "https://motofomo.com", "https://apps.apple.com/app/absolute-timer/id6755406554"])
+    assert.match(html, new RegExp(`class="tile[^"]*"[^>]*href="${url.replace(/[.?/]/g, "\\$&")}"[^>]*target="_blank" rel="noopener noreferrer"`), url);
+  assert.match(html, /<div class="marquee" aria-hidden="true">/);
+  assert.match(html, /mailto:info@discomedia.co/);
+  assert.equal([...html.matchAll(/class="selected-card"/g)].length, 6);
+  assert.match(html, /<script type="module" src="\/_astro\/[^"]+\.js"><\/script>/);
+  assert.ok(fs.statSync("dist/fonts/disco-display-latin.woff2").size > 10000);
+});

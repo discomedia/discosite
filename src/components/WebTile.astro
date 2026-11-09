@@ -1,0 +1,27 @@
+---
+import type { Project } from "../data/projects";
+type Props = { project: Project; index: number; reversed?: boolean };
+const { project, index, reversed = false } = Astro.props;
+const external = project.url.startsWith("https:");
+---
+
+<a
+  class:list={["tile", "tile-web", { "is-reversed": reversed }]}
+  style={`--i:${index}`}
+  href={project.url}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+  aria-label={external ? `${project.name} (opens in a new tab)` : `${project.name}: project details`}
+>
+  <span class="tile-web-copy">
+    <span class="tile-label">{project.category}</span>
+    <span class="tile-title">{project.name}</span>
+    <span class="tile-web-text">{project.description}</span>
+  </span>
+  <span class="browser" aria-hidden="true">
+    <span class="browser-bar"><i></i><i></i><i></i></span>
+    <span class="browser-window">
+      <img src={`/images/projects/${project.slug}.webp`} alt="" width={project.imageWidth} height={project.imageHeight} decoding="async" />
+    </span>
+  </span>
+</a>

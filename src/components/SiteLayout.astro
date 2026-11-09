@@ -61,6 +61,7 @@ const isCurrent = (href: string) => path === href || (href === "/portfolio/" && 
           <BrandMark />
         </a>
         <nav class="desktop-nav" aria-label="Primary navigation">
+          <span class="nav-indicator" aria-hidden="true"></span>
           {navigation.map((item) => (
             <a
               href={item.href}
@@ -93,10 +94,10 @@ const isCurrent = (href: string) => path === href || (href === "/portfolio/" && 
     </div>
     <footer class="site-footer">
       <div class="shell">
+        <a class="footer-wordmark" href="/" aria-label="Disco Media home">
+          {"discomedia.".split("").map((letter, index) => <span aria-hidden="true" style={`--n:${index}`}>{letter}</span>)}
+        </a>
         <div class="footer-top">
-          <a href="/" aria-label="Disco Media home">
-            <BrandMark />
-          </a>
           <p>
             Independent media & software.
             <br />Melbourne / Naarm, Australia.
@@ -118,6 +119,40 @@ const isCurrent = (href: string) => path === href || (href === "/portfolio/" && 
       </div>
     </footer>
     <script>
+      // Sliding pill behind the desktop navigation; rests on the current page.
+      const nav = document.querySelector<HTMLElement>(".desktop-nav");
+      const indicator = nav?.querySelector<HTMLElement>(".nav-indicator");
+      if (nav && indicator) {
+        const links = [...nav.querySelectorAll<HTMLAnchorElement>("a")];
+        const home = links.find(link => link.hasAttribute("aria-current"));
+        const moveTo = (link?: HTMLAnchorElement) => {
+          nav.classList.toggle("has-target", !!link);
+          links.forEach(item => item.classList.toggle("is-target", item === link));
+          if (!link) return;
+          indicator.style.width = `${link.offsetWidth}px`;
+          indicator.style.translate = `${link.offsetLeft}px 0`;
+        };
+        nav.classList.add("is-enhanced");
+        links.forEach(link => {
+          link.addEventListener("pointerenter", () => moveTo(link));
+          link.addEventListener("focus", () => moveTo(link));
+        });
+        nav.addEventListener("pointerleave", () => moveTo(home));
+        nav.addEventListener("focusout", () => moveTo(home));
+        moveTo(home);
+        document.fonts?.ready.then(() => moveTo(home));
+      }
+      // The footer wordmark waves once when it first scrolls into view.
+      const wordmark = document.querySelector(".footer-wordmark");
+      if (wordmark && "IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(entries => {
+          if (entries[0].isIntersecting) {
+            wordmark.classList.add("is-waving");
+            observer.disconnect();
+          }
+        }, { threshold: 0.6 });
+        observer.observe(wordmark);
+      }
       const menu = document.querySelector<HTMLDetailsElement>(".mobile-menu");
       menu?.addEventListener("keydown", event => {
         if (event.key === "Escape") {

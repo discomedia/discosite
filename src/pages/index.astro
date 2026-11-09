@@ -1,9 +1,39 @@
 ---
 import SiteLayout from "../components/SiteLayout.astro";
-import ProjectGrid from "../components/ProjectGrid.astro";
-import { projects } from "../data/projects";
-const selectedSlugs = ["discover-discomfort", "grandmaster-flash", "motofomo", "detour"];
-const selectedProjects = selectedSlugs.map(slug => projects.find(project => project.slug === slug)!);
+import WebTile from "../components/WebTile.astro";
+import { projects, type Project } from "../data/projects";
+
+const bySlug = (slug: string) => projects.find(project => project.slug === slug)!;
+const isExternal = (project: Project) => project.url.startsWith("https:");
+const linkProps = (project: Project) =>
+  isExternal(project)
+    ? { href: project.url, target: "_blank", rel: "noopener noreferrer", "aria-label": `${project.name} (opens in a new tab)` }
+    : { href: project.url, "aria-label": `${project.name}: project details` };
+const shortFormat = (project: Project) => project.format.replace(" · In development", "");
+
+const counts = {
+  apps: projects.filter(project => project.type === "apps").length,
+  sites: projects.filter(project => project.type === "sites").length,
+  other: projects.filter(project => project.type === "other").length,
+};
+const rotatingWords = ["Life", "Travel", "Languages", "Workouts", "Dancing", "Play"];
+
+const flash = bySlug("grandmaster-flash");
+const discomfort = bySlug("discover-discomfort");
+const motofomo = bySlug("motofomo");
+const timer = bySlug("absolute-timer");
+const inDevelopment = projects.filter(project => project.format.includes("In development"));
+
+const selectedSlugs = ["detour", "learn-just-enough", "salsamatic", "melbourne-social-club", "roy", "interesting-languages"];
+const selected = selectedSlugs.map(bySlug);
+const tints: Record<string, string> = {
+  detour: "#efe2cc",
+  "learn-just-enough": "#d6ebe6",
+  salsamatic: "#f6d9cf",
+  "melbourne-social-club": "#f1dfe8",
+  roy: "#e0ead7",
+  "interesting-languages": "#e3e6ef",
+};
 ---
 
 <SiteLayout
@@ -11,46 +41,134 @@ const selectedProjects = selectedSlugs.map(slug => projects.find(project => proj
   description="Disco Media is an independent media and software company in Melbourne / Naarm, Australia. Browse our publications, language apps, travel tools and other projects."
   path="/"
 >
-  <main id="main">
-    <section class="hero shell">
-      <div class="hero-copy">
-        <p class="eyebrow">Disco Media · Melbourne / Naarm, Australia</p>
-        <h1>Publishing and Apps <br /><span>for Everyday Life</span></h1>
-        <p class="hero-intro">
+  <main id="main" class="home">
+    <section class="bento shell" aria-labelledby="home-heading">
+      <div class="tile tile-intro" style="--i:0">
+        <p class="tile-label">Disco Media · Melbourne / Naarm, Australia</p>
+        <h1 id="home-heading">
+          Publishing and Apps for Everyday
+          <span class="rotator" aria-hidden="true"><span class="rotator-words">{[...rotatingWords, rotatingWords[0]].map(word => <span>{word}</span>)}</span></span><span class="sr-only">Life</span>
+        </h1>
+        <p class="tile-intro-copy">
           We publish apps, create websites, and build software for the world around us and everything we love.
         </p>
-        <div class="hero-actions">
-          <a class="button" href="/portfolio/">
-            View all {projects.length} projects
-          </a>
-          <a class="text-link" href="#selected-work">
-            Selected projects
-          </a>
+        <div class="tile-actions">
+          <a class="button magnetic" href="/portfolio/">View all {projects.length} projects</a>
+          <a class="button button-light magnetic" href="/contact/">Contact</a>
         </div>
       </div>
-      <div class="hero-art" aria-hidden="true">
-        <img
-          class="hero-globe"
-          src="/images/disco-globe.svg"
-          alt=""
-          width="660"
-          height="630"
-          fetchpriority="high"
-        />
+
+      <a class="tile tile-story" style="--i:1" {...linkProps(flash)}>
+        <span class="tile-label">{flash.category} · {shortFormat(flash)}</span>
+        <span class="tile-title">{flash.name}</span>
+        <span class="story-bars" aria-hidden="true"><i class="is-active"></i><i></i><i></i></span>
+        <span class="story-phone" data-story>
+          {flash.screenshots!.map((shot, index) => (
+            <img
+              src={shot.src}
+              alt={index === 0 ? shot.alt : ""}
+              width={shot.width}
+              height={shot.height}
+              class:list={{ "is-active": index === 0 }}
+              loading={index === 0 ? "eager" : "lazy"}
+              decoding="async"
+            />
+          ))}
+        </span>
+      </a>
+
+      <div class="tile tile-sky" style="--i:2" data-sky>
+        <img class="sky-globe" src="/images/disco-globe.svg" alt="" width="660" height="630" />
+        <i class="sparkle" style="--x:118px;--y:40px;--d:.2s" aria-hidden="true"></i>
+        <i class="sparkle" style="--x:176px;--y:96px;--d:1.1s" aria-hidden="true"></i>
+        <i class="sparkle small" style="--x:206px;--y:24px;--d:1.7s" aria-hidden="true"></i>
+        <i class="sparkle small" style="--x:148px;--y:128px;--d:.7s" aria-hidden="true"></i>
+        <p class="tile-label" data-sky-label>Melbourne / Naarm</p>
+        <p class="sky-clock"><span class="sr-only">Local time in Melbourne / Naarm: </span><time data-clock></time></p>
+      </div>
+
+      <a class="tile tile-count" style="--i:3" href="/portfolio/" aria-label={`All ${projects.length} projects: ${counts.apps} apps, ${counts.sites} websites and ${counts.other} tools`}>
+        <span class="tile-label">Projects</span>
+        <span class="count" style={`--to:${projects.length}`} aria-hidden="true"></span>
+        <span class="count-detail" aria-hidden="true">
+          <span class="count-bar"><i style={`flex:${counts.apps}`}></i><i style={`flex:${counts.sites}`}></i><i style={`flex:${counts.other}`}></i></span>
+          <span>{counts.apps} apps · {counts.sites} websites · {counts.other} tools</span>
+        </span>
+      </a>
+
+      <WebTile project={discomfort} index={4} />
+
+      <div class="tile tile-now" style="--i:5">
+        <p class="tile-label">Now building</p>
+        <div class="ticker">
+          <ul>
+            {inDevelopment.map(project => <li>{project.name}<span>iOS</span></li>)}
+          </ul>
+          <ul aria-hidden="true">
+            {inDevelopment.map(project => <li>{project.name}<span>iOS</span></li>)}
+          </ul>
+        </div>
+      </div>
+
+      <a class="tile tile-timer" style="--i:6" {...linkProps(timer)}>
+        <span class="tile-label">{timer.category} · {timer.format}</span>
+        <span class="tile-title">{timer.name}</span>
+        <span class="ring" data-timer aria-hidden="true">
+          <svg viewBox="0 0 180 180"><circle class="ring-track" cx="90" cy="90" r="80"></circle><circle class="ring-progress" cx="90" cy="90" r="80"></circle></svg>
+          <span class="ring-text"><b data-timer-time>0:20</b><span data-timer-mode>Work</span></span>
+        </span>
+        <span class="timer-foot" aria-hidden="true"><span data-timer-round>Round 1 of 8</span><span>Interval demo</span></span>
+      </a>
+
+      <WebTile project={motofomo} index={7} reversed />
+
+      <div class="tile tile-mail" style="--i:8">
+        <p class="tile-mail-title">Partnerships, press or app support</p>
+        <p class="tile-mail-row">
+          <a href="mailto:info@discomedia.co">info@discomedia.co</a>
+          <button type="button" class="copy-button" data-copy="info@discomedia.co" hidden>Copy</button>
+        </p>
       </div>
     </section>
-    <section id="selected-work" class="work-section shell" aria-labelledby="selected-heading">
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        {[0, 1].map(() => projects.map(project => <span>{project.name}</span>))}
+      </div>
+    </div>
+
+    <section class="selected shell" aria-labelledby="selected-heading" data-selected>
       <div class="section-heading">
         <div>
           <p class="eyebrow">Publications & apps</p>
           <h2 id="selected-heading">Selected projects</h2>
         </div>
-        <a class="text-link" href="/portfolio/">
-          Full portfolio
-        </a>
+        <a class="text-link" href="/portfolio/">Full portfolio</a>
       </div>
-      <ProjectGrid projects={selectedProjects} />
+      <div class="selected-grid">
+        {selected.map(project => (
+          <a class="selected-card" {...linkProps(project)}>
+            <span class="selected-art" style={`--tint:${tints[project.slug]}`}>
+              {project.screenshots ? (
+                <span class="selected-phone" data-slideshow>
+                  {project.screenshots.map((shot, index) => (
+                    <img src={shot.src} alt={index === 0 ? shot.alt : ""} width={shot.width} height={shot.height} class:list={{ "is-active": index === 0 }} loading="lazy" decoding="async" />
+                  ))}
+                </span>
+              ) : (
+                <img class="selected-site" src={`/images/projects/${project.slug}.webp`} alt={`Screenshot of ${project.name}`} width={project.imageWidth} height={project.imageHeight} loading="lazy" decoding="async" />
+              )}
+            </span>
+            <span class="selected-meta">
+              <span class="selected-name">{project.name}</span>
+              <span class="selected-format">{project.category} · {shortFormat(project)}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+      <span class="cursor-bubble" aria-hidden="true">Open</span>
     </section>
+
     <section id="about" class="about-section shell" aria-labelledby="about-heading">
       <div><p class="eyebrow">About Disco Media</p><h2 id="about-heading">We publish, build<br />and run our products.</h2></div>
       <div class="about-copy">
@@ -61,3 +179,172 @@ const selectedProjects = selectedSlugs.map(slug => projects.find(project => proj
     </section>
   </main>
 </SiteLayout>
+
+<script>
+  const motionOK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = window.matchMedia("(pointer: fine)").matches;
+  const bento = document.querySelector<HTMLElement>(".bento");
+
+  // Pause timers when the grid is off-screen or the tab is hidden.
+  let bentoVisible = true;
+  if (bento && "IntersectionObserver" in window) {
+    new IntersectionObserver(entries => { bentoVisible = entries[0].isIntersecting; }).observe(bento);
+  }
+  const active = () => motionOK && bentoVisible && !document.hidden;
+
+  // Cursor-lit borders: every tile reads the pointer position relative to itself.
+  if (bento && finePointer && motionOK) {
+    const tiles = [...bento.querySelectorAll<HTMLElement>(".tile")];
+    bento.addEventListener("pointermove", event => {
+      for (const tile of tiles) {
+        const box = tile.getBoundingClientRect();
+        tile.style.setProperty("--mx", `${event.clientX - box.left}px`);
+        tile.style.setProperty("--my", `${event.clientY - box.top}px`);
+      }
+    });
+    bento.addEventListener("pointerleave", () => {
+      for (const tile of tiles) tile.style.removeProperty("--mx"), tile.style.removeProperty("--my");
+    });
+  }
+
+  // Magnetic buttons lean toward the pointer.
+  if (finePointer && motionOK) {
+    for (const button of document.querySelectorAll<HTMLElement>(".magnetic")) {
+      button.addEventListener("pointermove", event => {
+        const box = button.getBoundingClientRect();
+        const x = (event.clientX - box.left - box.width / 2) * 0.3;
+        const y = (event.clientY - box.top - box.height / 2) * 0.4;
+        button.style.transform = `translate(${x}px, ${y}px)`;
+      });
+      button.addEventListener("pointerleave", () => { button.style.transform = ""; });
+    }
+  }
+
+  // Screenshot story with progress bars, and a tilt toward the pointer.
+  const story = document.querySelector<HTMLElement>("[data-story]");
+  if (story) {
+    const tile = story.closest<HTMLElement>(".tile")!;
+    const frames = [...story.querySelectorAll("img")];
+    const bars = [...tile.querySelectorAll(".story-bars i")];
+    let current = 0;
+    const show = (index: number) => {
+      current = index;
+      frames.forEach((frame, i) => frame.classList.toggle("is-active", i === index));
+      bars.forEach((bar, i) => {
+        bar.classList.toggle("is-done", i < index);
+        bar.classList.remove("is-active");
+        if (i === index) { void (bar as HTMLElement).offsetWidth; bar.classList.add("is-active"); }
+      });
+    };
+    if (motionOK) setInterval(() => { if (active()) show((current + 1) % frames.length); }, 2800);
+    if (finePointer && motionOK) {
+      tile.addEventListener("pointermove", event => {
+        const box = tile.getBoundingClientRect();
+        const rx = ((event.clientY - box.top) / box.height - 0.5) * -12;
+        const ry = ((event.clientX - box.left) / box.width - 0.5) * 18;
+        story.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+      });
+      tile.addEventListener("pointerleave", () => { story.style.transform = ""; });
+    }
+  }
+
+  // Melbourne clock and a sky that follows the local time of day.
+  const sky = document.querySelector<HTMLElement>("[data-sky]");
+  if (sky) {
+    const clock = sky.querySelector("[data-clock]")!;
+    const label = sky.querySelector("[data-sky-label]")!;
+    const timeFormat = new Intl.DateTimeFormat("en-AU", { timeZone: "Australia/Melbourne", hour: "numeric", minute: "2-digit", hour12: true });
+    const hourFormat = new Intl.DateTimeFormat("en-GB", { timeZone: "Australia/Melbourne", hour: "numeric", hour12: false });
+    const periods: [number, string][] = [[5, "night"], [8, "dawn"], [17, "day"], [20, "evening"], [24, "night"]];
+    const tick = () => {
+      const now = new Date();
+      const parts = timeFormat.formatToParts(now);
+      const part = (type: string) => parts.find(p => p.type === type)?.value ?? "";
+      clock.innerHTML = `${part("hour")}:${part("minute")}<small>${part("dayPeriod").toLowerCase().replace(/\./g, "")}</small>`;
+      clock.setAttribute("datetime", now.toISOString());
+      const hour = Number(hourFormat.format(now)) % 24;
+      const period = periods.find(([end]) => hour < end)![1];
+      sky.dataset.period = period;
+      label.textContent = `Melbourne / Naarm · ${period}`;
+    };
+    tick();
+    setInterval(tick, 15000);
+  }
+
+  // Interval timer demo: 20 seconds of work, 10 of rest, 8 rounds.
+  const ring = document.querySelector<HTMLElement>("[data-timer]");
+  if (ring) {
+    const work = 20, rest = 10, rounds = 8, circumference = 2 * Math.PI * 80;
+    const progress = ring.querySelector<SVGCircleElement>(".ring-progress")!;
+    const timeText = ring.querySelector("[data-timer-time]")!;
+    const modeText = ring.querySelector("[data-timer-mode]")!;
+    const roundText = document.querySelector("[data-timer-round]")!;
+    let mode: "work" | "rest" = "work", left = work, round = 1;
+    progress.style.strokeDasharray = `${circumference}`;
+    const draw = () => {
+      const total = mode === "work" ? work : rest;
+      progress.style.strokeDashoffset = `${circumference * (1 - left / total)}`;
+      timeText.textContent = `0:${String(left).padStart(2, "0")}`;
+      modeText.textContent = mode === "work" ? "Work" : "Rest";
+      ring.classList.toggle("is-rest", mode === "rest");
+      roundText.textContent = `Round ${round} of ${rounds}`;
+    };
+    draw();
+    if (motionOK) setInterval(() => {
+      if (!active()) return;
+      left -= 1;
+      if (left < 0) {
+        if (mode === "work") { mode = "rest"; left = rest; }
+        else { mode = "work"; left = work; round = (round % rounds) + 1; }
+      }
+      draw();
+    }, 1000);
+  }
+
+  // Copy the contact address.
+  for (const button of document.querySelectorAll<HTMLButtonElement>("[data-copy]")) {
+    if (!navigator.clipboard) continue;
+    button.hidden = false;
+    button.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy!);
+        button.textContent = "Copied";
+      } catch {
+        button.textContent = "Copy failed";
+      }
+      setTimeout(() => { button.textContent = "Copy"; }, 1800);
+    });
+  }
+
+  // Selected projects: app cards flick through screenshots on hover; a round cursor follows the pointer.
+  const selectedSection = document.querySelector<HTMLElement>("[data-selected]");
+  if (selectedSection && motionOK) {
+    for (const slideshow of selectedSection.querySelectorAll<HTMLElement>("[data-slideshow]")) {
+      const card = slideshow.closest<HTMLElement>(".selected-card")!;
+      const images = [...slideshow.querySelectorAll("img")];
+      let timer = 0, index = 0;
+      card.addEventListener("pointerenter", () => {
+        timer = window.setInterval(() => {
+          images[index].classList.remove("is-active");
+          index = (index + 1) % images.length;
+          images[index].classList.add("is-active");
+        }, 700);
+      });
+      card.addEventListener("pointerleave", () => {
+        clearInterval(timer);
+        images.forEach((image, i) => image.classList.toggle("is-active", i === 0));
+        index = 0;
+      });
+    }
+    if (finePointer) {
+      const bubble = selectedSection.querySelector<HTMLElement>(".cursor-bubble")!;
+      selectedSection.classList.add("has-bubble");
+      selectedSection.addEventListener("pointermove", event => {
+        const box = selectedSection.getBoundingClientRect();
+        bubble.style.translate = `${event.clientX - box.left}px ${event.clientY - box.top}px`;
+        selectedSection.classList.toggle("is-hovering", !!(event.target as Element).closest(".selected-card"));
+      });
+      selectedSection.addEventListener("pointerleave", () => selectedSection.classList.remove("is-hovering"));
+    }
+  }
+</script>
