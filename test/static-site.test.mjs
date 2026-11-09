@@ -121,7 +121,6 @@ test("homepage bento keeps its heading, links and static fallbacks", () => {
   assert.match(html, /aria-label="All 24 projects: 14 apps, 6 websites and 4 tools"/);
   for (const url of ["https://grandmasterflash.discomedia.co", "https://discoverdiscomfort.com", "https://motofomo.com", "https://apps.apple.com/app/absolute-timer/id6755406554"])
     assert.match(html, new RegExp(`class="tile[^"]*"[^>]*href="${url.replace(/[.?/]/g, "\\$&")}"[^>]*target="_blank" rel="noopener noreferrer"`), url);
-  assert.match(html, /<div class="marquee" aria-hidden="true">/);
   assert.match(html, /mailto:info@discomedia.co/);
   assert.equal([...html.matchAll(/class="selected-card"/g)].length, 6);
   assert.match(html, /<script type="module" src="\/_astro\/[^"]+\.js"><\/script>/);

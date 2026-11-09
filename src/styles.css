@@ -1469,47 +1469,6 @@ a.tile:hover {
   cursor: pointer;
 }
 
-.marquee {
-  margin-top: var(--space-4);
-  padding-block: 18px;
-  overflow: hidden;
-  white-space: nowrap;
-  background: var(--ink);
-  color: var(--surface);
-}
-.marquee-track {
-  display: inline-flex;
-  gap: 36px;
-  padding-left: 36px;
-  animation: marquee 60s linear infinite;
-}
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-.marquee span {
-  display: inline-flex;
-  align-items: center;
-  gap: 36px;
-  font-family: var(--heading-font);
-  font-size: 2.5rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-}
-.marquee span:nth-child(even) {
-  color: transparent;
-  -webkit-text-stroke: 1.2px var(--surface);
-}
-.marquee span::after {
-  content: "";
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--lime);
-}
-@keyframes marquee {
-  to { transform: translateX(-50%); }
-}
-
 .selected {
   position: relative;
   padding-block: var(--space-16) var(--space-12);
@@ -1643,9 +1602,6 @@ a.tile:hover {
   }
   .browser {
     margin: 0 -40px -90px 0;
-  }
-  .marquee span {
-    font-size: 1.75rem;
   }
   .selected {
     padding-block: var(--space-12) var(--space-8);
